@@ -306,6 +306,22 @@
             gap: 8px;
         }
         .btn-submit:hover { opacity: 0.95; transform: translateY(-1px); }
+        .btn-cancel-edit {
+            width: 100%;
+            background: var(--input-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 14px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
 
         /* --- ADMIN LIST --- */
         .admin-list-item { 
@@ -321,6 +337,22 @@
         .admin-list-info { display: flex; align-items: center; gap: 14px; }
         .admin-list-img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; }
         .admin-list-title { font-weight: 700; font-size: 15px; }
+        .admin-actions-btns { display: flex; gap: 8px; }
+        .btn-edit-item { 
+            background: #e0e7ff; 
+            color: var(--primary); 
+            border: none; 
+            padding: 8px 14px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 13px; 
+            font-weight: 700; 
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dark-mode .btn-edit-item { background: rgba(79, 70, 229, 0.2); }
+        .btn-edit-item:hover { background: var(--primary); color: white; }
         .btn-delete { 
             background: #fee2e2; 
             color: #ef4444; 
@@ -585,8 +617,10 @@
         <!-- ==================== VIEW 2: ADMIN ==================== -->
         <div id="view-admin" style="display: none;">
             <div class="panel">
-                <h2><i data-lucide="plus-circle" size="22"></i> Tambah Produk Baru</h2>
+                <h2 id="formPanelTitle"><i data-lucide="plus-circle" size="22"></i> Tambah Produk Baru</h2>
                 <form id="adminForm">
+                    <input type="hidden" id="editProductId" value="">
+                    
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Nama Produk</label>
@@ -603,16 +637,19 @@
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label><i data-lucide="image" size="16"></i> Foto Produk</label>
-                            <input type="file" id="prodImg" class="file-input" accept="image/*" required>
+                            <label><i data-lucide="image" size="16"></i> Foto Produk <small id="imgHelpText" style="color:var(--text-muted); text-transform:none; font-weight:normal;"></small></label>
+                            <input type="file" id="prodImg" class="file-input" accept="image/*">
                         </div>
                         <div class="form-group">
-                            <label><i data-lucide="video" size="16"></i> Video Demo</label>
-                            <input type="file" id="prodVid" class="file-input" accept="video/*" required>
+                            <label><i data-lucide="video" size="16"></i> Video Demo <small id="vidHelpText" style="color:var(--text-muted); text-transform:none; font-weight:normal;"></small></label>
+                            <input type="file" id="prodVid" class="file-input" accept="video/*">
                         </div>
                     </div>
-                    <button type="submit" class="btn-submit">
-                        <i data-lucide="send" size="18"></i> Publikasikan Produk
+                    <button type="submit" class="btn-submit" id="btnSubmitForm">
+                        <i data-lucide="send" size="18"></i> <span id="btnSubmitText">Publikasikan Produk</span>
+                    </button>
+                    <button type="button" class="btn-cancel-edit" id="btnCancelEdit" onclick="cancelEditMode()">
+                        <i data-lucide="x" size="18"></i> Batal Edit
                     </button>
                 </form>
             </div>
@@ -836,10 +873,54 @@
             });
         }
 
+        /* MANAJEMEN FORM & EDIT PRODUK */
+        function setFormRequired(isRequired) {
+            document.getElementById('prodImg').required = isRequired;
+            document.getElementById('prodVid').required = isRequired;
+        }
+        
+        // Default awal saat buka aplikasi
+        setFormRequired(true);
+
+        function startEditProduct(id) {
+            const produk = dataProduk.find(p => p.id === id);
+            if (!produk) return;
+
+            document.getElementById('editProductId').value = produk.id;
+            document.getElementById('prodName').value = produk.nama;
+            document.getElementById('prodPrice').value = produk.harga;
+            document.getElementById('prodDesc').value = produk.deskripsi;
+
+            // Media bersifat opsional saat edit
+            setFormRequired(false);
+
+            document.getElementById('formPanelTitle').innerHTML = `<i data-lucide="edit-3" size="22"></i> Edit Produk`;
+            document.getElementById('btnSubmitText').innerText = "Simpan Perubahan";
+            document.getElementById('imgHelpText').innerText = "(Kosongkan jika tidak ingin mengubah foto)";
+            document.getElementById('vidHelpText').innerText = "(Kosongkan jika tidak ingin mengubah video)";
+            document.getElementById('btnCancelEdit').style.display = "flex";
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            lucide.createIcons();
+        }
+
+        function cancelEditMode() {
+            document.getElementById('editProductId').value = '';
+            document.getElementById('adminForm').reset();
+            setFormRequired(true);
+
+            document.getElementById('formPanelTitle').innerHTML = `<i data-lucide="plus-circle" size="22"></i> Tambah Produk Baru`;
+            document.getElementById('btnSubmitText').innerText = "Publikasikan Produk";
+            document.getElementById('imgHelpText').innerText = "";
+            document.getElementById('vidHelpText').innerText = "";
+            document.getElementById('btnCancelEdit').style.display = "none";
+            lucide.createIcons();
+        }
+
         document.getElementById('adminForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const submitBtn = this.querySelector('.btn-submit');
-            submitBtn.innerHTML = `<i data-lucide="loader-2" class="spin" size="18"></i> Memproses...`;
+            const editId = document.getElementById('editProductId').value;
+            const submitBtn = document.getElementById('btnSubmitForm');
             submitBtn.disabled = true;
 
             try {
@@ -849,25 +930,52 @@
                 const imgFile = document.getElementById('prodImg').files[0];
                 const vidFile = document.getElementById('prodVid').files[0];
 
-                const imgURL = await getBase64(imgFile);
-                const vidURL = await getBase64(vidFile); // Konversi ke Base64 agar tersimpan utuh
+                if (editId) {
+                    // MODE EDIT
+                    const index = dataProduk.findIndex(p => p.id == editId);
+                    if (index !== -1) {
+                        dataProduk[index].nama = name;
+                        dataProduk[index].harga = price;
+                        dataProduk[index].deskripsi = desc;
 
-                dataProduk.push({
-                    id: Date.now(),
-                    nama: name,
-                    harga: price,
-                    deskripsi: desc,
-                    gambar: imgURL,
-                    video: vidURL
-                });
+                        if (imgFile) {
+                            dataProduk[index].gambar = await getBase64(imgFile);
+                        }
+                        if (vidFile) {
+                            dataProduk[index].video = await getBase64(vidFile);
+                        }
 
-                document.getElementById('adminForm').reset();
+                        showToast('Perubahan Produk Berhasil Disimpan!');
+                        cancelEditMode();
+                    }
+                } else {
+                    // MODE TAMBAH
+                    if (!imgFile || !vidFile) {
+                        showToast('Foto dan Video wajib diisi untuk produk baru!', 'error');
+                        submitBtn.disabled = false;
+                        return;
+                    }
+
+                    const imgURL = await getBase64(imgFile);
+                    const vidURL = await getBase64(vidFile);
+
+                    dataProduk.push({
+                        id: Date.now(),
+                        nama: name,
+                        harga: price,
+                        deskripsi: desc,
+                        gambar: imgURL,
+                        video: vidURL
+                    });
+
+                    document.getElementById('adminForm').reset();
+                    showToast('Produk Berhasil Diterbitkan!');
+                }
+
                 renderAdminList();
-                showToast('Produk Berhasil Diterbitkan!');
             } catch (error) {
-                showToast('Gagal memproses file media.', 'error');
+                showToast('Gagal memproses media.', 'error');
             } finally {
-                submitBtn.innerHTML = `<i data-lucide="send" size="18"></i> Publikasikan Produk`;
                 submitBtn.disabled = false;
                 lucide.createIcons();
             }
@@ -875,6 +983,9 @@
 
         function deleteProduct(id) {
             if(confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
+                if (document.getElementById('editProductId').value == id) {
+                    cancelEditMode();
+                }
                 dataProduk = dataProduk.filter(produk => produk.id !== id);
                 renderAdminList();
                 showToast("Produk berhasil dihapus", "success");
@@ -903,16 +1014,21 @@
                         <img src="${produk.gambar}" class="admin-list-img" alt="Thumbnail">
                         <div class="admin-list-title">${produk.nama}</div>
                     </div>
-                    <button class="btn-delete" onclick="deleteProduct(${produk.id})">
-                        <i data-lucide="trash-2" size="16"></i> Hapus
-                    </button>
+                    <div class="admin-actions-btns">
+                        <button class="btn-edit-item" onclick="startEditProduct(${produk.id})">
+                            <i data-lucide="edit" size="16"></i> Edit
+                        </button>
+                        <button class="btn-delete" onclick="deleteProduct(${produk.id})">
+                            <i data-lucide="trash-2" size="16"></i> Hapus
+                        </button>
+                    </div>
                 `;
                 list.appendChild(item);
             });
             lucide.createIcons();
         }
 
-        /* RENDER KATALOG DENGAN PEMUTAR VIDEO YANG DIPERBAIKI */
+        /* RENDER KATALOG */
         function renderKatalog() {
             const grid = document.getElementById('katalogGrid');
             const keyword = document.getElementById('searchBar').value.toLowerCase();
@@ -961,9 +1077,7 @@
                 grid.appendChild(card);
             });
 
-            // Paksa pemuatan video di Android/Chrome
             document.querySelectorAll('.product-video').forEach(video => video.load());
-            
             lucide.createIcons();
         }
 

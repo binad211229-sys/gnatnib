@@ -626,7 +626,7 @@
                 <i data-lucide="lock" size="44"></i>
             </div>
             <div class="modal-title">Akses Admin</div>
-            <div class="modal-subtitle">Masukkan kata sandi untuk melanjutkan</div>
+            <div class="modal-subtitle">Klik Masuk untuk melanjutkan</div>
             <input type="password" id="adminPasswordInput" class="form-control" placeholder="Masukkan password..." style="text-align: center;">
             <div class="modal-actions">
                 <button class="btn-modal-cancel" onclick="closeAdminModal()">Batal</button>
@@ -856,11 +856,11 @@
             }
         }
 
-        /* MODAL POP-UP ADMIN */
+        /* MODAL POP-UP ADMIN (AUTO-FILL PASSWORD) */
         function openAdminModal() {
             const modal = document.getElementById('adminAuthModal');
             const input = document.getElementById('adminPasswordInput');
-            input.value = '';
+            input.value = 'admin123'; // Mengisi otomatis password admin
             modal.classList.add('active');
             setTimeout(() => input.focus(), 100);
         }

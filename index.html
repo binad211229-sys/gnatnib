@@ -416,35 +416,21 @@
         .product-price { font-weight: 800; color: var(--accent-green); font-size: 20px; margin-bottom: 12px; }
         .product-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; flex-grow: 1; line-height: 1.6; word-wrap: break-word; }
         
-        /* Interactive Video Wrapper */
+        /* Video Container Optimisasi Mobile */
         .video-container {
             position: relative;
             width: 100%;
-            height: 160px;
+            height: 180px;
             background: #000;
             border-radius: var(--radius-md);
             margin-bottom: 16px;
             overflow: hidden;
-            cursor: pointer;
         }
         .product-video { 
             width: 100%; 
             height: 100%; 
             object-fit: cover; 
-        }
-        .video-play-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            transition: opacity 0.2s;
-        }
-        .video-container.playing .video-play-overlay {
-            opacity: 0;
-            pointer-events: none;
+            display: block;
         }
 
         .btn-buy { 
@@ -662,7 +648,7 @@
             <div class="panel">
                 <h2><i data-lucide="credit-card" size="22"></i> Halaman Pembayaran</h2>
                 
-                <!-- Ringkasan Produk yang dibeli -->
+                <!-- Ringkasan Produk -->
                 <div class="checkout-summary" id="checkoutProductInfo"></div>
 
                 <!-- Form Alamat dan Metode Pembayaran -->
@@ -698,7 +684,7 @@
                     </button>
                 </form>
 
-                <!-- Status Pengiriman (Ditampilkan setelah bayar) -->
+                <!-- Status Pengiriman -->
                 <div id="shippingStatusArea" style="display: none;">
                     <div class="status-card">
                         <div class="status-badge">
@@ -783,7 +769,7 @@
             }
         }
 
-        /* LOGIKA MODAL POP-UP ADMIN */
+        /* MODAL POP-UP ADMIN */
         function openAdminModal() {
             const modal = document.getElementById('adminAuthModal');
             const input = document.getElementById('adminPasswordInput');
@@ -864,7 +850,7 @@
                 const vidFile = document.getElementById('prodVid').files[0];
 
                 const imgURL = await getBase64(imgFile);
-                const vidURL = URL.createObjectURL(vidFile);
+                const vidURL = await getBase64(vidFile); // Konversi ke Base64 agar tersimpan utuh
 
                 dataProduk.push({
                     id: Date.now(),
@@ -872,8 +858,7 @@
                     harga: price,
                     deskripsi: desc,
                     gambar: imgURL,
-                    video: vidURL,
-                    tipeVideo: vidFile.type
+                    video: vidURL
                 });
 
                 document.getElementById('adminForm').reset();
@@ -927,6 +912,7 @@
             lucide.createIcons();
         }
 
+        /* RENDER KATALOG DENGAN PEMUTAR VIDEO YANG DIPERBAIKI */
         function renderKatalog() {
             const grid = document.getElementById('katalogGrid');
             const keyword = document.getElementById('searchBar').value.toLowerCase();
@@ -961,14 +947,10 @@
                         <div class="product-price">${hargaRupiah}</div>
                         <div class="product-desc">${produk.deskripsi}</div>
                         
-                        <!-- Video dengan Kontrol Klik Play/Pause -->
-                        <div class="video-container" onclick="togglePlayVideo(this)">
-                            <video class="product-video" loop muted playsinline>
-                                <source src="${produk.video}" type="${produk.tipeVideo}">
+                        <div class="video-container">
+                            <video class="product-video" src="${produk.video}" controls playsinline preload="metadata">
+                                Browser Anda tidak mendukung pemutaran video.
                             </video>
-                            <div class="video-play-overlay">
-                                <i data-lucide="play-circle" size="40"></i>
-                            </div>
                         </div>
                         
                         <button class="btn-buy" onclick="goToCheckout(${produk.id})">
@@ -978,28 +960,14 @@
                 `;
                 grid.appendChild(card);
             });
+
+            // Paksa pemuatan video di Android/Chrome
+            document.querySelectorAll('.product-video').forEach(video => video.load());
+            
             lucide.createIcons();
         }
 
-        /* FITUR 1: PLAY / PAUSE VIDEO SAAT DIKLIK */
-        function togglePlayVideo(container) {
-            const video = container.querySelector('video');
-            if (video.paused) {
-                // Hentikan video lain yang sedang berputar jika ada
-                document.querySelectorAll('video').forEach(v => {
-                    v.pause();
-                    if(v.parentElement) v.parentElement.classList.remove('playing');
-                });
-
-                video.play();
-                container.classList.add('playing');
-            } else {
-                video.pause();
-                container.classList.remove('playing');
-            }
-        }
-
-        /* FITUR 2: NAVIGASI KE HALAMAN CHECKOUT */
+        /* CHECKOUT & ISI ALAMAT */
         function goToCheckout(productId) {
             selectedProductForCheckout = dataProduk.find(p => p.id === productId);
             if (!selectedProductForCheckout) return;
@@ -1008,7 +976,6 @@
                 style: 'currency', currency: 'IDR', minimumFractionDigits: 0
             }).format(selectedProductForCheckout.harga);
 
-            // Tampilkan Ringkasan Produk
             const infoContainer = document.getElementById('checkoutProductInfo');
             infoContainer.innerHTML = `
                 <img src="${selectedProductForCheckout.gambar}" class="checkout-img">
@@ -1018,7 +985,6 @@
                 </div>
             `;
 
-            // Reset Form dan Tampilan Status
             document.getElementById('checkoutForm').reset();
             document.getElementById('checkoutForm').style.display = 'block';
             document.getElementById('shippingStatusArea').style.display = 'none';
@@ -1031,7 +997,7 @@
             showView('view-user');
         }
 
-        /* FITUR 3: PROSES PEMBAYARAN DAN TAMPILKAN ALAMAT & STATUS KETERANGAN */
+        /* PEMBAYARAN & STATUS PENGIRIMAN */
         function processPayment(event) {
             event.preventDefault();
 
@@ -1039,7 +1005,6 @@
             const phone = document.getElementById('buyerPhone').value;
             const address = document.getElementById('buyerAddress').value;
 
-            // Sembunyikan form pembayaran & tampilkan Keterangan Status Pengiriman
             document.getElementById('checkoutForm').style.display = 'none';
             
             document.getElementById('statusProdName').innerText = selectedProductForCheckout.nama;
@@ -1053,7 +1018,6 @@
             lucide.createIcons();
         }
 
-        // Inisialisasi awal
         document.addEventListener('DOMContentLoaded', initIcons);
     </script>
 </body>

@@ -3,340 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GadgetStore Pro - Premium E-Commerce</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>GadgetStore Pro - Ultimate</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* --- CSS VARIABLES & THEME --- */
+        /* --- CSS VARIABLES (UNTUK DARK MODE) --- */
         :root {
-            --bg-body: #f1f5f9;
+            --bg-body: #f8fafc;
             --bg-panel: #ffffff;
             --text-main: #0f172a;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
             --input-bg: #f8fafc;
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --primary-light: #e0e7ff;
-            --accent-green: #10b981;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.02);
-            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-            --shadow-lg: 0 20px 30px -10px rgba(79, 70, 229, 0.15);
-            --radius-lg: 20px;
-            --radius-md: 12px;
+            --shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
         .dark-mode {
-            --bg-body: #090d16;
-            --bg-panel: #131c2e;
+            --bg-body: #0f172a;
+            --bg-panel: #1e293b;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --border-color: #1e293b;
+            --border-color: #334155;
             --input-bg: #0f172a;
-            --primary-light: rgba(79, 70, 229, 0.15);
-            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
+            --shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        /* --- RESET & BASE STYLES --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, border-color 0.3s, transform 0.2s, box-shadow 0.2s; }
+        /* --- RESET & GLOBAL --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, color 0.3s; }
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-body);
             color: var(--text-main);
             line-height: 1.6;
-            padding-bottom: 60px;
-            min-height: 100vh;
+            padding-bottom: 50px;
         }
 
         /* --- NAVBAR --- */
         #navbar {
             display: none; 
-            background-color: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 16px 24px;
+            background-color: var(--bg-panel);
+            padding: 12px 15px;
+            box-shadow: var(--shadow);
             position: sticky;
             top: 0;
             z-index: 100;
+            display: flex;
+            flex-wrap: wrap; 
             justify-content: space-between;
             align-items: center;
+            gap: 10px;
             border-bottom: 1px solid var(--border-color);
         }
-        .dark-mode #navbar {
-            background-color: rgba(19, 28, 46, 0.8);
-        }
-        .nav-left { display: flex; align-items: center; gap: 12px; }
-        .nav-brand { 
-            font-size: 20px; 
-            font-weight: 800; 
-            background: linear-gradient(135deg, #6366f1, #a855f7); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-        }
-        .nav-role-badge { 
-            padding: 4px 12px; 
-            border-radius: 99px; 
-            font-size: 12px; 
-            font-weight: 700; 
-            letter-spacing: 0.3px;
-        }
-        .nav-actions { display: flex; gap: 10px; align-items: center; }
-        .btn-theme { 
-            background: var(--input-bg); 
-            border: 1px solid var(--border-color); 
-            color: var(--text-main); 
-            width: 40px; 
-            height: 40px; 
-            border-radius: 50%; 
-            cursor: pointer; 
-            font-size: 18px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-theme:hover { transform: rotate(15deg); }
-        .btn-logout { 
-            background: #ef4444; 
-            color: white; 
-            border: none; 
-            padding: 10px 16px; 
-            border-radius: var(--radius-md); 
-            font-weight: 700; 
-            font-size: 13px; 
-            cursor: pointer; 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-logout:hover { background: #dc2626; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+        .nav-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .nav-brand { font-size: 18px; font-weight: 800; }
+        .nav-role-badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+        
+        .nav-actions { display: flex; gap: 10px; }
+        .btn-theme { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        .btn-logout { background-color: #ef4444; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; white-space: nowrap; }
 
-        /* --- CONTAINER --- */
-        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        /* --- CONTAINER UTAMA --- */
+        .container { max-width: 900px; margin: 25px auto; padding: 0 15px; }
 
-        /* --- LOGIN VIEW --- */
-        #view-login { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
-        .login-box { 
-            background: var(--bg-panel); 
-            padding: 40px 30px; 
-            border-radius: 24px; 
-            box-shadow: var(--shadow-lg); 
-            text-align: center; 
-            width: 100%; 
-            max-width: 480px; 
-            border: 1px solid var(--border-color); 
-            position: relative;
-            overflow: hidden;
-        }
-        .login-box::before {
-            content: '';
-            position: absolute;
-            top: -50px; left: -50px;
-            width: 100px; height: 100px;
-            background: var(--primary);
-            filter: blur(60px);
-            border-radius: 50%;
-            opacity: 0.5;
-        }
-        .login-box h1 { font-weight: 800; font-size: 28px; margin-bottom: 8px; letter-spacing: -0.5px; }
-        .login-box p { color: var(--text-muted); font-size: 15px; margin-bottom: 30px; }
-        .role-cards { display: flex; gap: 16px; }
-        @media (max-width: 480px) { .role-cards { flex-direction: column; } }
-        .role-card { 
-            flex: 1; 
-            border: 2px solid var(--border-color); 
-            border-radius: var(--radius-lg); 
-            padding: 24px 16px; 
-            cursor: pointer; 
-            background-color: var(--input-bg); 
-        }
-        .role-card:hover { 
-            transform: translateY(-4px); 
-            box-shadow: var(--shadow-md); 
-        }
-        .role-card.admin:hover { border-color: #6366f1; background-color: var(--primary-light); }
-        .role-card.user:hover { border-color: var(--accent-green); background-color: rgba(16, 185, 129, 0.1); }
-        .role-icon { font-size: 40px; margin-bottom: 10px; display: block; }
-        .role-title { font-weight: 700; font-size: 16px; }
+        /* --- HALAMAN LOGIN --- */
+        #view-login { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; }
+        .login-box { background: var(--bg-panel); padding: 30px 20px; border-radius: 20px; box-shadow: var(--shadow); text-align: center; width: 100%; max-width: 450px; border: 1px solid var(--border-color); }
+        .login-box h1 { font-weight: 800; font-size: 22px; margin-bottom: 5px; }
+        .login-box p { color: var(--text-muted); font-size: 14px; margin-bottom: 25px; }
+        .role-cards { display: flex; gap: 15px; }
+        @media (max-width: 400px) { .role-cards { flex-direction: column; } }
+        .role-card { flex: 1; border: 2px solid var(--border-color); border-radius: 16px; padding: 20px 10px; cursor: pointer; background-color: var(--input-bg); }
+        .role-card.admin:hover { border-color: #3b82f6; background-color: rgba(59, 130, 246, 0.1); }
+        .role-card.user:hover { border-color: #10b981; background-color: rgba(16, 185, 129, 0.1); }
+        .role-icon { font-size: 35px; margin-bottom: 5px; }
+        .role-title { font-weight: 700; font-size: 15px; }
 
-        /* --- PANELS --- */
-        .panel { 
-            background: var(--bg-panel); 
-            padding: 30px; 
-            border-radius: 24px; 
-            box-shadow: var(--shadow-md); 
-            margin-bottom: 30px; 
-            border: 1px solid var(--border-color); 
-        }
-        .panel h2 { 
-            font-size: 20px; 
-            font-weight: 800; 
-            margin-bottom: 24px; 
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        /* --- PANEL UMUM --- */
+        .panel { background: var(--bg-panel); padding: 25px 20px; border-radius: 16px; box-shadow: var(--shadow); margin-bottom: 25px; border: 1px solid var(--border-color); }
+        .panel h2 { font-size: 18px; margin-bottom: 20px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+        
+        /* --- FORM --- */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: var(--text-muted); }
+        .form-control, .file-input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 14px; background-color: var(--input-bg); color: var(--text-main); }
+        .form-control:focus { outline: none; border-color: #3b82f6; }
+        .btn-submit { width: 100%; background: #2563eb; color: white; padding: 14px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 10px; font-size: 15px; }
 
-        /* --- FORM ELEMENTS --- */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-        }
-        .form-group { margin-bottom: 20px; }
-        .form-group.full-width { grid-column: 1 / -1; }
-        .form-group label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 8px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
-        .form-control, .file-input { 
-            width: 100%; 
-            padding: 14px 16px; 
-            border: 1.5px solid var(--border-color); 
-            border-radius: var(--radius-md); 
-            font-family: inherit; 
-            font-size: 14px; 
-            background-color: var(--input-bg); 
-            color: var(--text-main); 
-        }
-        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); }
-        .btn-submit { 
-            width: 100%; 
-            background: linear-gradient(135deg, var(--primary), #6366f1); 
-            color: white; 
-            padding: 16px; 
-            border: none; 
-            border-radius: var(--radius-md); 
-            font-weight: 700; 
-            cursor: pointer; 
-            font-size: 15px; 
-            box-shadow: var(--shadow-lg);
-            margin-top: 10px;
-        }
-        .btn-submit:hover { opacity: 0.95; transform: translateY(-1px); }
+        /* --- ADMIN KELOLA PRODUK (NEW) --- */
+        .admin-list-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 10px; background: var(--input-bg); }
+        .admin-list-info { display: flex; align-items: center; gap: 10px; }
+        .admin-list-img { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; }
+        .admin-list-title { font-weight: 600; font-size: 14px; }
+        .btn-delete { background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; }
 
-        /* --- ADMIN LIST --- */
-        .admin-list-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 14px 18px; 
-            border: 1px solid var(--border-color); 
-            border-radius: var(--radius-md); 
-            margin-bottom: 12px; 
-            background: var(--input-bg); 
-        }
-        .admin-list-info { display: flex; align-items: center; gap: 14px; }
-        .admin-list-img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; }
-        .admin-list-title { font-weight: 700; font-size: 15px; }
-        .btn-delete { 
-            background: #fee2e2; 
-            color: #ef4444; 
-            border: none; 
-            padding: 8px 14px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 13px; 
-            font-weight: 700; 
-        }
-        .dark-mode .btn-delete { background: rgba(239, 68, 68, 0.2); }
-        .btn-delete:hover { background: #ef4444; color: white; }
+        /* --- HALAMAN PEMBELI --- */
+        .search-bar { width: 100%; padding: 12px 15px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); margin-bottom: 20px; font-size: 14px; outline: none; }
+        .search-bar:focus { border-color: #10b981; }
+        
+        .katalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); border: 2px dashed var(--border-color); border-radius: 12px; grid-column: 1 / -1; font-size: 14px; }
+        
+        .product-card { border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; background: var(--bg-panel); display: flex; flex-direction: column; }
+        .product-img { width: 100%; height: 200px; object-fit: cover; background-color: var(--input-bg); }
+        .product-info { padding: 18px; display: flex; flex-direction: column; flex-grow: 1; }
+        .product-name { font-weight: 700; font-size: 18px; margin-bottom: 2px; }
+        .product-price { font-weight: 800; color: #10b981; font-size: 18px; margin-bottom: 12px; }
+        .product-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; flex-grow: 1; line-height: 1.5; word-wrap: break-word; }
+        .product-video { width: 100%; height: 160px; background: black; border-radius: 8px; margin-bottom: 15px; }
+        .btn-buy { display: block; text-align: center; background: #10b981; color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 14px; }
 
-        /* --- KATALOG & SEARCH --- */
-        .search-bar { 
-            width: 100%; 
-            padding: 16px 20px; 
-            border-radius: 99px; 
-            border: 1.5px solid var(--border-color); 
-            background: var(--input-bg); 
-            color: var(--text-main); 
-            margin-bottom: 25px; 
-            font-size: 15px; 
-            outline: none; 
-            box-shadow: var(--shadow-sm);
-        }
-        .search-bar:focus { border-color: var(--accent-green); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
-
-        .katalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-        .empty-state { 
-            text-align: center; 
-            padding: 60px 20px; 
-            color: var(--text-muted); 
-            border: 2px dashed var(--border-color); 
-            border-radius: var(--radius-lg); 
-            grid-column: 1 / -1; 
-            font-size: 15px; 
-            font-weight: 500;
-        }
-
-        /* --- PRODUCT CARD --- */
-        .product-card { 
-            border: 1px solid var(--border-color); 
-            border-radius: var(--radius-lg); 
-            overflow: hidden; 
-            background: var(--bg-panel); 
-            display: flex; 
-            flex-direction: column; 
-            box-shadow: var(--shadow-sm);
-        }
-        .product-card:hover { 
-            transform: translateY(-6px); 
-            box-shadow: var(--shadow-md); 
-            border-color: rgba(99, 102, 241, 0.3);
-        }
-        .product-img-wrapper { position: relative; width: 100%; height: 220px; overflow: hidden; background: var(--input-bg); }
-        .product-img { width: 100%; height: 100%; object-fit: cover; }
-        .product-badge { 
-            position: absolute; 
-            top: 12px; left: 12px; 
-            background: rgba(15, 23, 42, 0.75); 
-            backdrop-filter: blur(8px);
-            color: white; 
-            padding: 4px 10px; 
-            border-radius: 99px; 
-            font-size: 11px; 
-            font-weight: 700; 
-            letter-spacing: 0.5px;
-        }
-        .product-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
-        .product-name { font-weight: 800; font-size: 18px; margin-bottom: 4px; line-height: 1.3; }
-        .product-price { font-weight: 800; color: var(--accent-green); font-size: 20px; margin-bottom: 12px; }
-        .product-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; flex-grow: 1; line-height: 1.6; word-wrap: break-word; }
-        .product-video { width: 100%; height: 160px; background: #000; border-radius: var(--radius-md); margin-bottom: 16px; object-fit: cover; }
-        .btn-buy { 
-            display: block; 
-            width: 100%;
-            text-align: center; 
-            background: var(--accent-green); 
-            color: white; 
-            padding: 14px; 
-            border-radius: var(--radius-md); 
-            border: none;
-            font-weight: 700; 
-            font-size: 14px; 
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
-        }
-        .btn-buy:hover { opacity: 0.9; }
-
-        /* --- TOAST NOTIFICATION --- */
-        #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
-        .toast { 
-            background: var(--bg-panel); 
-            color: var(--text-main); 
-            padding: 14px 20px; 
-            border-radius: var(--radius-md); 
-            font-size: 14px; 
-            font-weight: 600; 
-            box-shadow: var(--shadow-lg); 
-            opacity: 0; 
-            transform: translateX(50px); 
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .toast.show { opacity: 1; transform: translateX(0); }
-        .toast.success { border-left: 4px solid var(--accent-green); }
+        /* --- TOAST NOTIFICATION (NEW) --- */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: #1e293b; color: white; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.2); opacity: 0; transform: translateY(20px); transition: all 0.3s ease; }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { border-left: 4px solid #10b981; }
         .toast.error { border-left: 4px solid #ef4444; }
+
     </style>
 </head>
 <body>
@@ -348,10 +130,9 @@
             <div class="nav-role-badge" id="navRoleText">Role</div>
         </div>
         <div class="nav-actions">
-            <button class="btn-theme" onclick="toggleTheme()" title="Ubah Tema">🌙</button>
-            <button class="btn-logout" onclick="logout()">
-                <span>🔄</span> Ganti Peran
-            </button>
+            <!-- Tombol Dark Mode -->
+            <button class="btn-theme" onclick="toggleTheme()">🌙</button>
+            <button class="btn-logout" onclick="logout()">🔄 Peran</button>
         </div>
     </nav>
 
@@ -364,14 +145,14 @@
         <div id="view-login">
             <div class="login-box">
                 <h1>GadgetStore Pro</h1>
-                <p>Silakan pilih akses peran Anda</p>
+                <p>Pilih peran Anda untuk masuk</p>
                 <div class="role-cards">
                     <div class="role-card admin" onclick="login('admin')">
-                        <span class="role-icon">👨‍💻</span>
-                        <div class="role-title">Admin Store</div>
+                        <div class="role-icon">👨‍💻</div>
+                        <div class="role-title">Admin</div>
                     </div>
                     <div class="role-card user" onclick="login('user')">
-                        <span class="role-icon">🛍️</span>
+                        <div class="role-icon">🛍️</div>
                         <div class="role-title">Pembeli</div>
                     </div>
                 </div>
@@ -380,74 +161,82 @@
 
         <!-- ==================== VIEW 2: ADMIN ==================== -->
         <div id="view-admin" style="display: none;">
+            <!-- Form Tambah Produk -->
             <div class="panel">
-                <h2>⚡ Tambah Produk Baru</h2>
+                <h2>⚙️ Tambah Produk Baru</h2>
                 <form id="adminForm">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Nama Produk</label>
-                            <input type="text" id="prodName" class="form-control" required placeholder="Cth: MacBook Pro M3">
-                        </div>
-                        <div class="form-group">
-                            <label>Harga Produk (IDR)</label>
-                            <input type="number" id="prodPrice" class="form-control" required placeholder="Cth: 25000000">
-                        </div>
+                    <div class="form-group">
+                        <label>Nama Produk</label>
+                        <input type="text" id="prodName" class="form-control" required placeholder="Cth: iPhone 15 Pro">
                     </div>
-                    <div class="form-group full-width">
-                        <label>Spesifikasi / Deskripsi Singkat</label>
-                        <textarea id="prodDesc" class="form-control" rows="3" required placeholder="Jelaskan keunggulan produk..."></textarea>
+                    <div class="form-group">
+                        <label>Harga Produk (Tanpa Titik)</label>
+                        <input type="number" id="prodPrice" class="form-control" required placeholder="Cth: 20000000">
                     </div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>📸 Foto Produk</label>
-                            <input type="file" id="prodImg" class="file-input" accept="image/*" required>
-                        </div>
-                        <div class="form-group">
-                            <label>🎥 Video Demo</label>
-                            <input type="file" id="prodVid" class="file-input" accept="video/*" required>
-                        </div>
+                    <div class="form-group">
+                        <label>Spesifikasi / Deskripsi</label>
+                        <textarea id="prodDesc" class="form-control" rows="3" required placeholder="Detail produk..."></textarea>
                     </div>
-                    <button type="submit" class="btn-submit">🚀 Publikasikan Produk</button>
+                    <div class="form-group">
+                        <label>📸 Upload Foto Produk</label>
+                        <input type="file" id="prodImg" class="file-input" accept="image/png, image/jpeg, image/jpg, image/webp" required>
+                    </div>
+                    <div class="form-group">
+                        <label>🎥 Upload Video Demo</label>
+                        <input type="file" id="prodVid" class="file-input" accept="video/mp4, video/webm, video/ogg" required>
+                    </div>
+                    <button type="submit" class="btn-submit">Simpan & Publikasikan</button>
                 </form>
             </div>
 
+            <!-- Panel Kelola Produk (Bisa Hapus) -->
             <div class="panel">
                 <h2>📦 Kelola Produk Terunggah</h2>
-                <div id="adminProductList"></div>
+                <div id="adminProductList">
+                    <!-- List produk yang bisa dihapus muncul di sini -->
+                </div>
             </div>
         </div>
 
         <!-- ==================== VIEW 3: PEMBELI ==================== -->
         <div id="view-user" style="display: none;">
             <div class="panel">
-                <h2>🛍️ Katalog Gadget Pilihan</h2>
-                <input type="text" id="searchBar" class="search-bar" placeholder="🔍 Cari gadget impian Anda..." oninput="renderKatalog()">
+                <h2>🛍️ Katalog Gadget Terbaru</h2>
+                <!-- Fitur Live Search -->
+                <input type="text" id="searchBar" class="search-bar" placeholder="🔍 Cari nama HP atau Laptop..." oninput="renderKatalog()">
                 
-                <div class="katalog-grid" id="katalogGrid"></div>
+                <div class="katalog-grid" id="katalogGrid">
+                    <!-- Produk muncul di sini -->
+                </div>
             </div>
         </div>
 
     </div>
 
+    <!-- JAVASCRIPT -->
     <script>
         let dataProduk = [];
 
+        // --- FITUR TOAST NOTIFICATION ---
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            const icon = type === 'success' ? '✅' : '⚠️';
-            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+            toast.innerText = message;
             
             container.appendChild(toast);
+            
+            // Animasi masuk
             setTimeout(() => toast.classList.add('show'), 10);
             
+            // Hilang otomatis setelah 3 detik
             setTimeout(() => {
                 toast.classList.remove('show');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
 
+        // --- FITUR DARK MODE ---
         let isDarkMode = false;
         function toggleTheme() {
             const body = document.body;
@@ -470,6 +259,7 @@
             document.getElementById(viewId).style.display = 'block';
         }
 
+        // --- LOGIKA LOGIN (TETAP PAKAI PASSWORD admin123) ---
         function login(role) {
             const badge = document.getElementById('navRoleText');
             
@@ -477,11 +267,11 @@
                 const password = prompt("Masukkan Password Admin:");
                 if (password === "admin123") {
                     document.getElementById('navbar').style.display = 'flex';
-                    badge.innerText = "Mode Admin";
-                    badge.style.backgroundColor = "var(--primary-light)";
-                    badge.style.color = "var(--primary)";
+                    badge.innerText = "Mode: Admin";
+                    badge.style.backgroundColor = "#dbeafe";
+                    badge.style.color = "#1e40af";
                     showView('view-admin');
-                    renderAdminList();
+                    renderAdminList(); // Tampilkan list kelola produk
                     showToast("Login Admin Berhasil!");
                 } else if (password !== null) {
                     showToast("Password Salah!", "error");
@@ -489,10 +279,10 @@
             } 
             else if (role === 'user') {
                 document.getElementById('navbar').style.display = 'flex';
-                badge.innerText = "Mode Pembeli";
-                badge.style.backgroundColor = "rgba(16, 185, 129, 0.15)";
-                badge.style.color = "var(--accent-green)";
-                document.getElementById('searchBar').value = '';
+                badge.innerText = "Mode: Pembeli";
+                badge.style.backgroundColor = "#dcfce7";
+                badge.style.color = "#166534";
+                document.getElementById('searchBar').value = ''; // Reset search
                 showView('view-user');
                 renderKatalog();
                 showToast("Selamat Datang di Katalog!");
@@ -513,6 +303,7 @@
             });
         }
 
+        // --- LOGIKA TAMBAH PRODUK ---
         document.getElementById('adminForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const submitBtn = this.querySelector('.btn-submit');
@@ -530,7 +321,7 @@
                 const vidURL = URL.createObjectURL(vidFile);
 
                 dataProduk.push({
-                    id: Date.now(),
+                    id: Date.now(), // ID unik untuk fitur hapus
                     nama: name,
                     harga: price,
                     deskripsi: desc,
@@ -540,18 +331,20 @@
                 });
 
                 document.getElementById('adminForm').reset();
-                renderAdminList();
-                showToast('Produk Berhasil Diterbitkan!');
+                renderAdminList(); // Update list di bawah form
+                showToast('Produk Berhasil Ditambahkan!');
             } catch (error) {
-                showToast('Gagal memproses file media.', 'error');
+                showToast('Gagal memproses file.', 'error');
             } finally {
-                submitBtn.innerText = "🚀 Publikasikan Produk";
+                submitBtn.innerText = "Simpan & Publikasikan";
                 submitBtn.disabled = false;
             }
         });
 
+        // --- FITUR HAPUS PRODUK (ADMIN) ---
         function deleteProduct(id) {
-            if(confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
+            if(confirm("Yakin ingin membatalkan dan menghapus produk ini?")) {
+                // Filter array untuk membuang produk dengan ID tersebut
                 dataProduk = dataProduk.filter(produk => produk.id !== id);
                 renderAdminList();
                 showToast("Produk berhasil dihapus", "success");
@@ -572,7 +365,7 @@
                 item.className = 'admin-list-item';
                 item.innerHTML = `
                     <div class="admin-list-info">
-                        <img src="${produk.gambar}" class="admin-list-img" alt="Thumbnail">
+                        <img src="${produk.gambar}" class="admin-list-img">
                         <div class="admin-list-title">${produk.nama}</div>
                     </div>
                     <button class="btn-delete" onclick="deleteProduct(${produk.id})">🗑️ Hapus</button>
@@ -581,15 +374,21 @@
             });
         }
 
+        // --- LOGIKA KATALOG & PENCARIAN (PEMBELI) ---
         function renderKatalog() {
             const grid = document.getElementById('katalogGrid');
             const keyword = document.getElementById('searchBar').value.toLowerCase();
             grid.innerHTML = '';
 
+            // Filter data berdasarkan ketikan di search bar
             const filteredData = dataProduk.filter(produk => produk.nama.toLowerCase().includes(keyword));
 
             if (filteredData.length === 0) {
-                grid.innerHTML = `<div class="empty-state">🛒 Tidak ada gadget yang cocok dengan pencarian Anda.</div>`;
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        🛒 Tidak menemukan produk yang cocok.
+                    </div>
+                `;
                 return;
             }
 
@@ -601,10 +400,7 @@
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
-                    <div class="product-img-wrapper">
-                        <span class="product-badge">Ready Stock</span>
-                        <img src="${produk.gambar}" class="product-img" alt="${produk.nama}">
-                    </div>
+                    <img src="${produk.gambar}" class="product-img" alt="Foto Produk">
                     <div class="product-info">
                         <div class="product-name">${produk.nama}</div>
                         <div class="product-price">${hargaRupiah}</div>
@@ -612,7 +408,6 @@
                         
                         <video controls class="product-video">
                             <source src="${produk.video}" type="${produk.tipeVideo}">
-                            Browser Anda tidak mendukung preview video.
                         </video>
                         
                         <button class="btn-buy" onclick="showToast('Mengalihkan ke Pembayaran...')">Beli Sekarang</button>

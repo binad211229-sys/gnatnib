@@ -90,7 +90,6 @@
             height: 40px; 
             border-radius: 50%; 
             cursor: pointer; 
-            font-size: 18px; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -149,6 +148,9 @@
             padding: 24px 16px; 
             cursor: pointer; 
             background-color: var(--input-bg); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .role-card:hover { 
             transform: translateY(-4px); 
@@ -156,10 +158,10 @@
         }
         .role-card.admin:hover { border-color: #6366f1; background-color: var(--primary-light); }
         .role-card.user:hover { border-color: var(--accent-green); background-color: rgba(16, 185, 129, 0.1); }
-        .role-icon { font-size: 40px; margin-bottom: 10px; display: block; }
+        .role-icon { margin-bottom: 12px; color: var(--text-main); }
         .role-title { font-weight: 700; font-size: 16px; }
 
-        /* --- MODAL DIALOG ESTETIK (NEW) --- */
+        /* --- MODAL DIALOG --- */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -194,9 +196,11 @@
             transform: scale(1);
         }
         .modal-icon {
-            font-size: 44px;
             margin-bottom: 12px;
-            display: inline-block;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary);
         }
         .modal-title {
             font-size: 20px;
@@ -261,7 +265,17 @@
         }
         .form-group { margin-bottom: 20px; }
         .form-group.full-width { grid-column: 1 / -1; }
-        .form-group label { display: block; font-weight: 700; font-size: 13px; margin-bottom: 8px; color: var(--text-main); text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group label { 
+            display: flex; 
+            align-items: center;
+            gap: 6px;
+            font-weight: 700; 
+            font-size: 13px; 
+            margin-bottom: 8px; 
+            color: var(--text-main); 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+        }
         .form-control, .file-input { 
             width: 100%; 
             padding: 14px 16px; 
@@ -285,6 +299,10 @@
             font-size: 15px; 
             box-shadow: var(--shadow-lg);
             margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         .btn-submit:hover { opacity: 0.95; transform: translateY(-1px); }
 
@@ -311,19 +329,35 @@
             cursor: pointer; 
             font-size: 13px; 
             font-weight: 700; 
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         .dark-mode .btn-delete { background: rgba(239, 68, 68, 0.2); }
         .btn-delete:hover { background: #ef4444; color: white; }
 
         /* --- KATALOG & SEARCH --- */
+        .search-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        .search-icon-wrapper {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+        }
         .search-bar { 
             width: 100%; 
-            padding: 16px 20px; 
+            padding: 16px 20px 16px 48px; 
             border-radius: 99px; 
             border: 1.5px solid var(--border-color); 
             background: var(--input-bg); 
             color: var(--text-main); 
-            margin-bottom: 25px; 
             font-size: 15px; 
             outline: none; 
             box-shadow: var(--shadow-sm);
@@ -340,6 +374,10 @@
             grid-column: 1 / -1; 
             font-size: 15px; 
             font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
         }
 
         /* --- PRODUCT CARD --- */
@@ -377,7 +415,10 @@
         .product-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; flex-grow: 1; line-height: 1.6; word-wrap: break-word; }
         .product-video { width: 100%; height: 160px; background: #000; border-radius: var(--radius-md); margin-bottom: 16px; object-fit: cover; }
         .btn-buy { 
-            display: block; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             width: 100%;
             text-align: center; 
             background: var(--accent-green); 
@@ -414,6 +455,8 @@
         .toast.success { border-left: 4px solid var(--accent-green); }
         .toast.error { border-left: 4px solid #ef4444; }
     </style>
+    <!-- Lucide Icons Library -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 
@@ -424,9 +467,12 @@
             <div class="nav-role-badge" id="navRoleText">Role</div>
         </div>
         <div class="nav-actions">
-            <button class="btn-theme" onclick="toggleTheme()" title="Ubah Tema">🌙</button>
+            <button class="btn-theme" id="btnTheme" onclick="toggleTheme()" title="Ubah Tema">
+                <i data-lucide="moon" id="themeIcon"></i>
+            </button>
             <button class="btn-logout" onclick="logout()">
-                <span>🔄</span> Ganti Peran
+                <i data-lucide="log-out" size="16"></i>
+                <span>Logout</span>
             </button>
         </div>
     </nav>
@@ -434,10 +480,12 @@
     <!-- TOAST CONTAINER -->
     <div id="toast-container"></div>
 
-    <!-- MODAL POP-UP ADMIN PASSWORD (ESTETIK) -->
+    <!-- MODAL POP-UP ADMIN PASSWORD -->
     <div class="modal-overlay" id="adminAuthModal">
         <div class="modal-card">
-            <span class="modal-icon">🔐</span>
+            <div class="modal-icon">
+                <i data-lucide="lock" size="44"></i>
+            </div>
             <div class="modal-title">Akses Admin</div>
             <div class="modal-subtitle">Masukkan kata sandi untuk melanjutkan</div>
             <input type="password" id="adminPasswordInput" class="form-control" placeholder="Masukkan password..." style="text-align: center;">
@@ -457,11 +505,11 @@
                 <p>Silakan pilih akses peran Anda</p>
                 <div class="role-cards">
                     <div class="role-card admin" onclick="login('admin')">
-                        <span class="role-icon">👨‍💻</span>
+                        <i data-lucide="shield-check" size="40" class="role-icon"></i>
                         <div class="role-title">Admin Store</div>
                     </div>
                     <div class="role-card user" onclick="login('user')">
-                        <span class="role-icon">🛍️</span>
+                        <i data-lucide="shopping-bag" size="40" class="role-icon"></i>
                         <div class="role-title">Pembeli</div>
                     </div>
                 </div>
@@ -471,7 +519,7 @@
         <!-- ==================== VIEW 2: ADMIN ==================== -->
         <div id="view-admin" style="display: none;">
             <div class="panel">
-                <h2>⚡ Tambah Produk Baru</h2>
+                <h2><i data-lucide="plus-circle" size="22"></i> Tambah Produk Baru</h2>
                 <form id="adminForm">
                     <div class="form-grid">
                         <div class="form-group">
@@ -489,20 +537,22 @@
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>📸 Foto Produk</label>
+                            <label><i data-lucide="image" size="16"></i> Foto Produk</label>
                             <input type="file" id="prodImg" class="file-input" accept="image/*" required>
                         </div>
                         <div class="form-group">
-                            <label>🎥 Video Demo</label>
+                            <label><i data-lucide="video" size="16"></i> Video Demo</label>
                             <input type="file" id="prodVid" class="file-input" accept="video/*" required>
                         </div>
                     </div>
-                    <button type="submit" class="btn-submit">🚀 Publikasikan Produk</button>
+                    <button type="submit" class="btn-submit">
+                        <i data-lucide="send" size="18"></i> Publikasikan Produk
+                    </button>
                 </form>
             </div>
 
             <div class="panel">
-                <h2>📦 Kelola Produk Terunggah</h2>
+                <h2><i data-lucide="package" size="22"></i> Kelola Produk Terunggah</h2>
                 <div id="adminProductList"></div>
             </div>
         </div>
@@ -510,8 +560,14 @@
         <!-- ==================== VIEW 3: PEMBELI ==================== -->
         <div id="view-user" style="display: none;">
             <div class="panel">
-                <h2>🛍️ Katalog Gadget Pilihan</h2>
-                <input type="text" id="searchBar" class="search-bar" placeholder="🔍 Cari gadget impian Anda..." oninput="renderKatalog()">
+                <h2><i data-lucide="store" size="22"></i> Katalog Gadget Pilihan</h2>
+                
+                <div class="search-container">
+                    <div class="search-icon-wrapper">
+                        <i data-lucide="search" size="18"></i>
+                    </div>
+                    <input type="text" id="searchBar" class="search-bar" placeholder="Cari gadget impian Anda..." oninput="renderKatalog()">
+                </div>
                 
                 <div class="katalog-grid" id="katalogGrid"></div>
             </div>
@@ -522,14 +578,23 @@
     <script>
         let dataProduk = [];
 
+        function initIcons() {
+            lucide.createIcons();
+        }
+
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            const icon = type === 'success' ? '✅' : '⚠️';
-            toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+            const iconName = type === 'success' ? 'check-circle' : 'alert-circle';
+            
+            toast.innerHTML = `<i data-lucide="${iconName}" size="18"></i> <span>${message}</span>`;
             
             container.appendChild(toast);
+            lucide.createIcons({
+                targets: [toast]
+            });
+
             setTimeout(() => toast.classList.add('show'), 10);
             
             setTimeout(() => {
@@ -541,16 +606,17 @@
         let isDarkMode = false;
         function toggleTheme() {
             const body = document.body;
-            const btn = document.querySelector('.btn-theme');
+            const themeIcon = document.getElementById('themeIcon');
             isDarkMode = !isDarkMode;
             
             if (isDarkMode) {
                 body.classList.add('dark-mode');
-                btn.innerText = '☀️';
+                themeIcon.setAttribute('data-lucide', 'sun');
             } else {
                 body.classList.remove('dark-mode');
-                btn.innerText = '🌙';
+                themeIcon.setAttribute('data-lucide', 'moon');
             }
+            lucide.createIcons();
         }
 
         function showView(viewId) {
@@ -560,7 +626,7 @@
             document.getElementById(viewId).style.display = 'block';
         }
 
-        // --- LOGIKA MODAL POP-UP ADMIN ---
+        /* LOGIKA MODAL POP-UP ADMIN */
         function openAdminModal() {
             const modal = document.getElementById('adminAuthModal');
             const input = document.getElementById('adminPasswordInput');
@@ -591,7 +657,6 @@
             }
         }
 
-        // Menjalankan verifikasi ketika menekan tombol Enter pada input password modal
         document.getElementById('adminPasswordInput').addEventListener('keyup', function(e) {
             if (e.key === 'Enter') {
                 verifyAdminPassword();
@@ -633,7 +698,7 @@
         document.getElementById('adminForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const submitBtn = this.querySelector('.btn-submit');
-            submitBtn.innerText = "Memproses...";
+            submitBtn.innerHTML = `<i data-lucide="loader-2" class="spin" size="18"></i> Memproses...`;
             submitBtn.disabled = true;
 
             try {
@@ -662,8 +727,9 @@
             } catch (error) {
                 showToast('Gagal memproses file media.', 'error');
             } finally {
-                submitBtn.innerText = "🚀 Publikasikan Produk";
+                submitBtn.innerHTML = `<i data-lucide="send" size="18"></i> Publikasikan Produk`;
                 submitBtn.disabled = false;
+                lucide.createIcons();
             }
         });
 
@@ -680,7 +746,12 @@
             list.innerHTML = '';
 
             if (dataProduk.length === 0) {
-                list.innerHTML = '<div class="empty-state">Belum ada produk yang diunggah.</div>';
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i data-lucide="inbox" size="36"></i>
+                        <span>Belum ada produk yang diunggah.</span>
+                    </div>`;
+                lucide.createIcons();
                 return;
             }
 
@@ -692,10 +763,13 @@
                         <img src="${produk.gambar}" class="admin-list-img" alt="Thumbnail">
                         <div class="admin-list-title">${produk.nama}</div>
                     </div>
-                    <button class="btn-delete" onclick="deleteProduct(${produk.id})">🗑️ Hapus</button>
+                    <button class="btn-delete" onclick="deleteProduct(${produk.id})">
+                        <i data-lucide="trash-2" size="16"></i> Hapus
+                    </button>
                 `;
                 list.appendChild(item);
             });
+            lucide.createIcons();
         }
 
         function renderKatalog() {
@@ -706,7 +780,12 @@
             const filteredData = dataProduk.filter(produk => produk.nama.toLowerCase().includes(keyword));
 
             if (filteredData.length === 0) {
-                grid.innerHTML = `<div class="empty-state">🛒 Tidak ada gadget yang cocok dengan pencarian Anda.</div>`;
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <i data-lucide="search-x" size="36"></i>
+                        <span>Tidak ada gadget yang cocok dengan pencarian Anda.</span>
+                    </div>`;
+                lucide.createIcons();
                 return;
             }
 
@@ -732,12 +811,18 @@
                             Browser Anda tidak mendukung preview video.
                         </video>
                         
-                        <button class="btn-buy" onclick="showToast('Mengalihkan ke Pembayaran...')">Beli Sekarang</button>
+                        <button class="btn-buy" onclick="showToast('Mengalihkan ke Pembayaran...')">
+                            <i data-lucide="shopping-cart" size="18"></i> Beli Sekarang
+                        </button>
                     </div>
                 `;
                 grid.appendChild(card);
             });
+            lucide.createIcons();
         }
+
+        // Inisialisasi ikon Lucide pertama kali saat dokumen selesai dimuat
+        document.addEventListener('DOMContentLoaded', initIcons);
     </script>
 </body>
 </html>

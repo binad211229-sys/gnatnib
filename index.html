@@ -73,6 +73,7 @@
             background: linear-gradient(135deg, #6366f1, #a855f7); 
             -webkit-background-clip: text; 
             -webkit-text-fill-color: transparent; 
+            cursor: pointer;
         }
         .nav-role-badge { 
             padding: 4px 12px; 
@@ -380,7 +381,7 @@
             gap: 12px;
         }
 
-        /* --- PRODUCT CARD --- */
+        /* --- PRODUCT CARD & VIDEO PLAYER --- */
         .product-card { 
             border: 1px solid var(--border-color); 
             border-radius: var(--radius-lg); 
@@ -408,12 +409,44 @@
             font-size: 11px; 
             font-weight: 700; 
             letter-spacing: 0.5px;
+            z-index: 2;
         }
         .product-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
         .product-name { font-weight: 800; font-size: 18px; margin-bottom: 4px; line-height: 1.3; }
         .product-price { font-weight: 800; color: var(--accent-green); font-size: 20px; margin-bottom: 12px; }
         .product-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; flex-grow: 1; line-height: 1.6; word-wrap: break-word; }
-        .product-video { width: 100%; height: 160px; background: #000; border-radius: var(--radius-md); margin-bottom: 16px; object-fit: cover; }
+        
+        /* Interactive Video Wrapper */
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 160px;
+            background: #000;
+            border-radius: var(--radius-md);
+            margin-bottom: 16px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .product-video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+        }
+        .video-play-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: opacity 0.2s;
+        }
+        .video-container.playing .video-play-overlay {
+            opacity: 0;
+            pointer-events: none;
+        }
+
         .btn-buy { 
             display: flex;
             align-items: center;
@@ -432,6 +465,53 @@
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
         }
         .btn-buy:hover { opacity: 0.9; }
+
+        /* --- CHECKOUT & STATUS SHIPPING --- */
+        .checkout-summary {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .checkout-img { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; }
+        
+        .status-card {
+            border: 2px dashed var(--accent-green);
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent-green);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 99px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+        .btn-back {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
 
         /* --- TOAST NOTIFICATION --- */
         #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
@@ -463,7 +543,7 @@
     <!-- NAVBAR -->
     <nav id="navbar">
         <div class="nav-left">
-            <div class="nav-brand">GadgetStore</div>
+            <div class="nav-brand" onclick="goHome()">GadgetStore</div>
             <div class="nav-role-badge" id="navRoleText">Role</div>
         </div>
         <div class="nav-actions">
@@ -573,10 +653,79 @@
             </div>
         </div>
 
+        <!-- ==================== VIEW 4: PEMBAYARAN & STATUS ==================== -->
+        <div id="view-checkout" style="display: none;">
+            <button class="btn-back" onclick="goBackToCatalog()">
+                <i data-lucide="arrow-left" size="18"></i> Kembali ke Katalog
+            </button>
+            
+            <div class="panel">
+                <h2><i data-lucide="credit-card" size="22"></i> Halaman Pembayaran</h2>
+                
+                <!-- Ringkasan Produk yang dibeli -->
+                <div class="checkout-summary" id="checkoutProductInfo"></div>
+
+                <!-- Form Alamat dan Metode Pembayaran -->
+                <form id="checkoutForm" onsubmit="processPayment(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nama Penerima</label>
+                            <input type="text" id="buyerName" class="form-control" required placeholder="Cth: Budi Santoso">
+                        </div>
+                        <div class="form-group">
+                            <label>Nomor Telepon/WA</label>
+                            <input type="tel" id="buyerPhone" class="form-control" required placeholder="Cth: 081234567890">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Alamat Lengkap Pengiriman</label>
+                        <textarea id="buyerAddress" class="form-control" rows="3" required placeholder="Masukkan nama jalan, nomor rumah, kecamatan, kota, dan kode pos..."></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Metode Pembayaran</label>
+                        <select class="form-control" required>
+                            <option value="">-- Pilih Metode Pembayaran --</option>
+                            <option value="qris">QRIS / Instant Payment</option>
+                            <option value="bank">Transfer Bank (BCA/Mandiri/BRI)</option>
+                            <option value="cod">Bayar di Tempat (COD)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i data-lucide="check-circle" size="18"></i> Konfirmasi & Bayar Sekarang
+                    </button>
+                </form>
+
+                <!-- Status Pengiriman (Ditampilkan setelah bayar) -->
+                <div id="shippingStatusArea" style="display: none;">
+                    <div class="status-card">
+                        <div class="status-badge">
+                            <i data-lucide="truck" size="16"></i> Dalam Pengiriman
+                        </div>
+                        <h3 style="font-size: 18px; margin-bottom: 8px;">Pesanan Anda Sedang Diproses!</h3>
+                        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">
+                            Barang <strong id="statusProdName">Gadget</strong> sedang dikemas dan langsung dikirim ke alamat tujuan:
+                        </p>
+                        <div style="background: var(--bg-panel); padding: 16px; border-radius: var(--radius-md); text-align: left; border: 1px solid var(--border-color); font-size: 14px; line-height: 1.6;">
+                            <p><strong>Penerima:</strong> <span id="statusName">-</span> (<span id="statusPhone">-</span>)</p>
+                            <p><strong>Alamat Tujuan:</strong></p>
+                            <p id="statusAddress" style="color: var(--text-muted);">-</p>
+                            <hr style="margin: 12px 0; border: none; border-top: 1px solid var(--border-color);">
+                            <p><strong>Estimasi Tiba:</strong> 1 - 3 Hari Kerja</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
     <script>
         let dataProduk = [];
+        let selectedProductForCheckout = null;
 
         function initIcons() {
             lucide.createIcons();
@@ -591,9 +740,7 @@
             toast.innerHTML = `<i data-lucide="${iconName}" size="18"></i> <span>${message}</span>`;
             
             container.appendChild(toast);
-            lucide.createIcons({
-                targets: [toast]
-            });
+            lucide.createIcons({ targets: [toast] });
 
             setTimeout(() => toast.classList.add('show'), 10);
             
@@ -623,7 +770,17 @@
             document.getElementById('view-login').style.display = 'none';
             document.getElementById('view-admin').style.display = 'none';
             document.getElementById('view-user').style.display = 'none';
+            document.getElementById('view-checkout').style.display = 'none';
             document.getElementById(viewId).style.display = 'block';
+        }
+
+        function goHome() {
+            const currentRole = document.getElementById('navRoleText').innerText;
+            if (currentRole.includes("Admin")) {
+                showView('view-admin');
+            } else if (currentRole.includes("Pembeli")) {
+                showView('view-user');
+            }
         }
 
         /* LOGIKA MODAL POP-UP ADMIN */
@@ -658,9 +815,7 @@
         }
 
         document.getElementById('adminPasswordInput').addEventListener('keyup', function(e) {
-            if (e.key === 'Enter') {
-                verifyAdminPassword();
-            }
+            if (e.key === 'Enter') verifyAdminPassword();
         });
 
         function login(role) {
@@ -806,12 +961,17 @@
                         <div class="product-price">${hargaRupiah}</div>
                         <div class="product-desc">${produk.deskripsi}</div>
                         
-                        <video controls class="product-video">
-                            <source src="${produk.video}" type="${produk.tipeVideo}">
-                            Browser Anda tidak mendukung preview video.
-                        </video>
+                        <!-- Video dengan Kontrol Klik Play/Pause -->
+                        <div class="video-container" onclick="togglePlayVideo(this)">
+                            <video class="product-video" loop muted playsinline>
+                                <source src="${produk.video}" type="${produk.tipeVideo}">
+                            </video>
+                            <div class="video-play-overlay">
+                                <i data-lucide="play-circle" size="40"></i>
+                            </div>
+                        </div>
                         
-                        <button class="btn-buy" onclick="showToast('Mengalihkan ke Pembayaran...')">
+                        <button class="btn-buy" onclick="goToCheckout(${produk.id})">
                             <i data-lucide="shopping-cart" size="18"></i> Beli Sekarang
                         </button>
                     </div>
@@ -821,7 +981,79 @@
             lucide.createIcons();
         }
 
-        // Inisialisasi ikon Lucide pertama kali saat dokumen selesai dimuat
+        /* FITUR 1: PLAY / PAUSE VIDEO SAAT DIKLIK */
+        function togglePlayVideo(container) {
+            const video = container.querySelector('video');
+            if (video.paused) {
+                // Hentikan video lain yang sedang berputar jika ada
+                document.querySelectorAll('video').forEach(v => {
+                    v.pause();
+                    if(v.parentElement) v.parentElement.classList.remove('playing');
+                });
+
+                video.play();
+                container.classList.add('playing');
+            } else {
+                video.pause();
+                container.classList.remove('playing');
+            }
+        }
+
+        /* FITUR 2: NAVIGASI KE HALAMAN CHECKOUT */
+        function goToCheckout(productId) {
+            selectedProductForCheckout = dataProduk.find(p => p.id === productId);
+            if (!selectedProductForCheckout) return;
+
+            const hargaRupiah = new Intl.NumberFormat('id-ID', {
+                style: 'currency', currency: 'IDR', minimumFractionDigits: 0
+            }).format(selectedProductForCheckout.harga);
+
+            // Tampilkan Ringkasan Produk
+            const infoContainer = document.getElementById('checkoutProductInfo');
+            infoContainer.innerHTML = `
+                <img src="${selectedProductForCheckout.gambar}" class="checkout-img">
+                <div>
+                    <h3 style="font-size: 16px; font-weight: 800;">${selectedProductForCheckout.nama}</h3>
+                    <p style="color: var(--accent-green); font-weight: 800; font-size: 16px;">${hargaRupiah}</p>
+                </div>
+            `;
+
+            // Reset Form dan Tampilan Status
+            document.getElementById('checkoutForm').reset();
+            document.getElementById('checkoutForm').style.display = 'block';
+            document.getElementById('shippingStatusArea').style.display = 'none';
+
+            showView('view-checkout');
+            lucide.createIcons();
+        }
+
+        function goBackToCatalog() {
+            showView('view-user');
+        }
+
+        /* FITUR 3: PROSES PEMBAYARAN DAN TAMPILKAN ALAMAT & STATUS KETERANGAN */
+        function processPayment(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('buyerName').value;
+            const phone = document.getElementById('buyerPhone').value;
+            const address = document.getElementById('buyerAddress').value;
+
+            // Sembunyikan form pembayaran & tampilkan Keterangan Status Pengiriman
+            document.getElementById('checkoutForm').style.display = 'none';
+            
+            document.getElementById('statusProdName').innerText = selectedProductForCheckout.nama;
+            document.getElementById('statusName').innerText = name;
+            document.getElementById('statusPhone').innerText = phone;
+            document.getElementById('statusAddress').innerText = address;
+
+            document.getElementById('shippingStatusArea').style.display = 'block';
+
+            showToast("Pembayaran Berhasil! Pesanan diproses.", "success");
+            lucide.createIcons();
+        }
+
+        // Inisialisasi awal
         document.addEventListener('DOMContentLoaded', initIcons);
     </script>
 </body>

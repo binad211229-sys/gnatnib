@@ -159,6 +159,82 @@
         .role-icon { font-size: 40px; margin-bottom: 10px; display: block; }
         .role-title { font-weight: 700; font-size: 16px; }
 
+        /* --- MODAL DIALOG ESTETIK (NEW) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 32px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            transform: scale(0.9);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+        .modal-icon {
+            font-size: 44px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+        .modal-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-modal-cancel {
+            flex: 1;
+            background: var(--input-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .btn-modal-confirm {
+            flex: 1;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
         /* --- PANELS --- */
         .panel { 
             background: var(--bg-panel); 
@@ -358,6 +434,20 @@
     <!-- TOAST CONTAINER -->
     <div id="toast-container"></div>
 
+    <!-- MODAL POP-UP ADMIN PASSWORD (ESTETIK) -->
+    <div class="modal-overlay" id="adminAuthModal">
+        <div class="modal-card">
+            <span class="modal-icon">🔐</span>
+            <div class="modal-title">Akses Admin</div>
+            <div class="modal-subtitle">Masukkan kata sandi untuk melanjutkan</div>
+            <input type="password" id="adminPasswordInput" class="form-control" placeholder="Masukkan password..." style="text-align: center;">
+            <div class="modal-actions">
+                <button class="btn-modal-cancel" onclick="closeAdminModal()">Batal</button>
+                <button class="btn-modal-confirm" onclick="verifyAdminPassword()">Masuk</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         
         <!-- ==================== VIEW 1: LOGIN ==================== -->
@@ -470,22 +560,49 @@
             document.getElementById(viewId).style.display = 'block';
         }
 
+        // --- LOGIKA MODAL POP-UP ADMIN ---
+        function openAdminModal() {
+            const modal = document.getElementById('adminAuthModal');
+            const input = document.getElementById('adminPasswordInput');
+            input.value = '';
+            modal.classList.add('active');
+            setTimeout(() => input.focus(), 100);
+        }
+
+        function closeAdminModal() {
+            const modal = document.getElementById('adminAuthModal');
+            modal.classList.remove('active');
+        }
+
+        function verifyAdminPassword() {
+            const input = document.getElementById('adminPasswordInput').value;
+            if (input === "admin123") {
+                closeAdminModal();
+                const badge = document.getElementById('navRoleText');
+                document.getElementById('navbar').style.display = 'flex';
+                badge.innerText = "Mode Admin";
+                badge.style.backgroundColor = "var(--primary-light)";
+                badge.style.color = "var(--primary)";
+                showView('view-admin');
+                renderAdminList();
+                showToast("Login Admin Berhasil!");
+            } else {
+                showToast("Password Salah!", "error");
+            }
+        }
+
+        // Menjalankan verifikasi ketika menekan tombol Enter pada input password modal
+        document.getElementById('adminPasswordInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                verifyAdminPassword();
+            }
+        });
+
         function login(role) {
             const badge = document.getElementById('navRoleText');
             
             if (role === 'admin') {
-                const password = prompt("Masukkan Password Admin:");
-                if (password === "admin123") {
-                    document.getElementById('navbar').style.display = 'flex';
-                    badge.innerText = "Mode Admin";
-                    badge.style.backgroundColor = "var(--primary-light)";
-                    badge.style.color = "var(--primary)";
-                    showView('view-admin');
-                    renderAdminList();
-                    showToast("Login Admin Berhasil!");
-                } else if (password !== null) {
-                    showToast("Password Salah!", "error");
-                }
+                openAdminModal();
             } 
             else if (role === 'user') {
                 document.getElementById('navbar').style.display = 'flex';

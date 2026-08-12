@@ -38,7 +38,7 @@
 
             <!-- Tampilan Pilihan Role -->
             <div id="roleSelection" class="space-y-4">
-                <button onclick="loginAsBuyer()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg hover:shadow-emerald-500/30 transition transform active:scale-95 flex items-center justify-center space-x-2">
+                <button onclick="showBuyerForm()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg hover:shadow-emerald-500/30 transition transform active:scale-95 flex items-center justify-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 11h14a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2z"></path></svg>
                     <span>Masuk sebagai Pembeli</span>
                 </button>
@@ -49,14 +49,26 @@
                 </button>
             </div>
 
-            <!-- Form Password Admin (Otomatis Terisi) -->
+            <!-- Form Password Pembeli (Otomatis Terisi: pembeli123) -->
+            <form id="buyerForm" onsubmit="loginAsBuyer(event)" class="hidden space-y-4 text-left mt-4 animate-fade-in">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Password Pembeli</label>
+                    <input type="password" id="buyerPassword" value="pembeli123" required class="w-full p-3 border rounded-xl dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-emerald-500 outline-none text-gray-900 dark:text-white font-mono text-center text-lg tracking-widest">
+                </div>
+                <div class="flex space-x-2">
+                    <button type="button" onclick="hideRoleForms()" class="w-1/3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 py-3 rounded-xl font-medium transition">Batal</button>
+                    <button type="submit" class="w-2/3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-emerald-600/30 transition">Login Pembeli</button>
+                </div>
+            </form>
+
+            <!-- Form Password Admin (Otomatis Terisi: admin123) -->
             <form id="adminForm" onsubmit="loginAsAdmin(event)" class="hidden space-y-4 text-left mt-4 animate-fade-in">
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Password Admin</label>
                     <input type="password" id="adminPassword" value="admin123" required class="w-full p-3 border rounded-xl dark:bg-gray-700 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 outline-none text-gray-900 dark:text-white font-mono text-center text-lg tracking-widest">
                 </div>
                 <div class="flex space-x-2">
-                    <button type="button" onclick="hideAdminForm()" class="w-1/3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 py-3 rounded-xl font-medium transition">Batal</button>
+                    <button type="button" onclick="hideRoleForms()" class="w-1/3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 py-3 rounded-xl font-medium transition">Batal</button>
                     <button type="submit" class="w-2/3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-indigo-600/30 transition">Login Admin</button>
                 </div>
             </form>
@@ -70,7 +82,20 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
                 <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">GadgetStore</h1>
                 
-                <div class="flex items-center space-x-3">
+                <div class="flex items-center space-x-2 sm:space-x-3">
+                    <!-- Tombol Pelacakan Pesanan (Hanya Pembeli) -->
+                    <button id="btnTracking" onclick="bukaModalTracking()" class="relative p-2 rounded-lg bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 transition flex items-center space-x-1 text-xs sm:text-sm font-semibold">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"></path></svg>
+                        <span class="hidden sm:inline">Pesanan Saya</span>
+                    </button>
+
+                    <!-- Tombol Keranjang Belanja (Hanya Pembeli) -->
+                    <button id="btnKeranjang" onclick="bukaModalKeranjang()" class="relative p-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 transition flex items-center space-x-1 text-xs sm:text-sm font-semibold">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"></path></svg>
+                        <span class="hidden sm:inline">Keranjang</span>
+                        <span id="badgeKeranjang" class="ml-1 bg-emerald-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+                    </button>
+
                     <!-- Toggle Mode Pembeli / Admin -->
                     <button id="toggleModeBtn" onclick="toggleModeRole()" class="px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 hover:opacity-80 transition">
                         Mode Pembeli
@@ -88,7 +113,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
                         </svg>
-                        <span>Logout</span>
+                        <span class="hidden sm:inline">Logout</span>
                     </button>
                 </div>
             </div>
@@ -128,6 +153,84 @@
             <!-- Grid Katalog Produk -->
             <div id="produkGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </main>
+    </div>
+
+    <!-- MODAL KERANJANG BELANJA -->
+    <div id="modalKeranjang" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gray-200 dark:border-gray-700 animate-fade-in flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center border-b pb-3 dark:border-gray-700">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center space-x-2">
+                    <span>🛒 Keranjang Belanja</span>
+                </h3>
+                <button onclick="tutupModalKeranjang()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 font-bold text-xl">&times;</button>
+            </div>
+
+            <div id="isiKeranjang" class="overflow-y-auto my-4 space-y-3 flex-1 pr-1">
+                <!-- Item Keranjang Di-render oleh JS -->
+            </div>
+
+            <div class="border-t pt-4 dark:border-gray-700 space-y-3">
+                <div class="flex justify-between font-bold text-lg text-gray-900 dark:text-white">
+                    <span>Total:</span>
+                    <span id="totalKeranjang" class="text-emerald-600 dark:text-emerald-400">Rp 0</span>
+                </div>
+                <button onclick="bukaModalPembayaran()" id="btnLanjutBayar" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition shadow-lg">Lanjut ke Pembayaran</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PEMBAYARAN / CHECKOUT -->
+    <div id="modalPembayaran" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-200 dark:border-gray-700 animate-fade-in">
+            <h3 class="text-lg font-bold mb-4 text-indigo-600 dark:text-indigo-400">Pembayaran & Checkout</h3>
+            
+            <form onsubmit="prosesPembayaran(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Nama Penerima</label>
+                    <input type="text" id="namaPembeli" placeholder="Nama Lengkap" required class="w-full p-2.5 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Alamat Pengiriman</label>
+                    <textarea id="alamatPembeli" rows="2" placeholder="Alamat lengkap tujuan..." required class="w-full p-2.5 border rounded-lg dark:bg-gray-700 dark:border-gray-600"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Metode Pembayaran</label>
+                    <select id="metodeBayar" class="w-full p-2.5 border rounded-lg dark:bg-gray-700 dark:border-gray-600 font-medium">
+                        <option value="QRIS / Transfer Bank">QRIS / Transfer Bank Instant</option>
+                        <option value="E-Wallet (GoPay / OVO / Dana)">E-Wallet (GoPay / OVO / Dana)</option>
+                        <option value="Kartu Kredit / Debit">Kartu Kredit / Debit</option>
+                    </select>
+                </div>
+
+                <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-xl flex justify-between items-center text-sm">
+                    <span class="text-gray-500 dark:text-gray-400">Total Tagihan:</span>
+                    <span id="totalBayarText" class="font-extrabold text-emerald-600 dark:text-emerald-400 text-base">Rp 0</span>
+                </div>
+
+                <div class="flex space-x-2 pt-2">
+                    <button type="button" onclick="tutupModalPembayaran()" class="w-1/3 py-2.5 rounded-xl bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 text-gray-700 dark:text-gray-200 font-medium transition">Batal</button>
+                    <button type="submit" class="w-2/3 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition shadow-lg">Bayar Sekarang</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL PELACAKAN PESANAN -->
+    <div id="modalTracking" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-gray-200 dark:border-gray-700 animate-fade-in flex flex-col max-h-[85vh]">
+            <div class="flex justify-between items-center border-b pb-3 dark:border-gray-700">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center space-x-2">
+                    <span>🚚 Pelacakan Pesanan Saya</span>
+                </h3>
+                <button onclick="tutupModalTracking()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 font-bold text-xl">&times;</button>
+            </div>
+
+            <div id="daftarPesanan" class="overflow-y-auto my-4 space-y-4 flex-1 pr-1">
+                <!-- Pesanan Di-render oleh JS -->
+            </div>
+        </div>
     </div>
 
     <!-- Modal Edit Produk -->
@@ -228,23 +331,37 @@
             }
         ];
 
+        let keranjang = [];
+        let dataPesanan = [];
         let isAdmin = false;
 
         // FUNGSI ALUR LOGIN & LOGOUT
+        function showBuyerForm() {
+            document.getElementById('roleSelection').classList.add('hidden');
+            document.getElementById('buyerForm').classList.remove('hidden');
+        }
+
         function showAdminForm() {
             document.getElementById('roleSelection').classList.add('hidden');
             document.getElementById('adminForm').classList.remove('hidden');
         }
 
-        function hideAdminForm() {
+        function hideRoleForms() {
+            document.getElementById('buyerForm').classList.add('hidden');
             document.getElementById('adminForm').classList.add('hidden');
             document.getElementById('roleSelection').classList.remove('hidden');
         }
 
-        function loginAsBuyer() {
-            isAdmin = false;
-            updateModeUI();
-            masukKeDashboard();
+        function loginAsBuyer(e) {
+            e.preventDefault();
+            const pass = document.getElementById('buyerPassword').value;
+            if (pass === "pembeli123") {
+                isAdmin = false;
+                updateModeUI();
+                masukKeDashboard();
+            } else {
+                alert("Password Pembeli Salah!");
+            }
         }
 
         function loginAsAdmin(e) {
@@ -255,7 +372,7 @@
                 updateModeUI();
                 masukKeDashboard();
             } else {
-                alert("Password Salah!");
+                alert("Password Admin Salah!");
             }
         }
 
@@ -263,6 +380,7 @@
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('mainDashboard').classList.remove('hidden');
             renderProduk();
+            updateKeranjangUI();
         }
 
         function bukaModalLogout() {
@@ -277,7 +395,7 @@
 
         function prosesLogout() {
             tutupModalLogout();
-            hideAdminForm();
+            hideRoleForms();
             document.getElementById('mainDashboard').classList.add('hidden');
             document.getElementById('loginPage').classList.remove('hidden');
         }
@@ -296,15 +414,21 @@
         function updateModeUI() {
             const btn = document.getElementById('toggleModeBtn');
             const adminPanel = document.getElementById('adminPanel');
+            const btnKeranjang = document.getElementById('btnKeranjang');
+            const btnTracking = document.getElementById('btnTracking');
 
             if (isAdmin) {
                 btn.innerText = 'Mode Admin';
                 btn.className = 'px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 hover:opacity-80 transition';
                 adminPanel.classList.remove('hidden');
+                btnKeranjang.classList.add('hidden');
+                btnTracking.classList.add('hidden');
             } else {
                 btn.innerText = 'Mode Pembeli';
                 btn.className = 'px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 hover:opacity-80 transition';
                 adminPanel.classList.add('hidden');
+                btnKeranjang.classList.remove('hidden');
+                btnTracking.classList.remove('hidden');
             }
         }
 
@@ -355,7 +479,7 @@
                                 <button onclick="hapusProduk(${item.id})" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white py-2 rounded-lg font-medium text-sm transition">Hapus</button>
                             </div>
                         ` : `
-                            <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg font-semibold flex items-center justify-center space-x-2 transition">
+                            <button onclick="tambahKeKeranjang(${item.id})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg font-semibold flex items-center justify-center space-x-2 transition shadow-md hover:shadow-emerald-600/30">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"></path></svg>
                                 <span>Beli Sekarang</span>
                             </button>
@@ -366,7 +490,218 @@
             });
         }
 
-        // Tambah Produk dengan Notifikasi "barang telah ditambah"
+        // FUNGSI KERANJANG BELANJA & KONTROL KUANTITAS
+        function tambahKeKeranjang(id) {
+            const produk = dataProduk.find(p => p.id === id);
+            if (!produk) return;
+
+            const adaDiKeranjang = keranjang.find(item => item.id === id);
+            if (adaDiKeranjang) {
+                adaDiKeranjang.qty += 1;
+            } else {
+                keranjang.push({ ...produk, qty: 1 });
+            }
+
+            updateKeranjangUI();
+            alert(`"${produk.nama}" telah berhasil dimasukkan ke keranjang!`);
+        }
+
+        function ubahQty(id, delta) {
+            const item = keranjang.find(i => i.id === id);
+            if (!item) return;
+
+            item.qty += delta;
+            if (item.qty <= 0) {
+                keranjang = keranjang.filter(i => i.id !== id);
+            }
+            updateKeranjangUI();
+        }
+
+        function updateKeranjangUI() {
+            const count = keranjang.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('badgeKeranjang').innerText = count;
+
+            const container = document.getElementById('isiKeranjang');
+            container.innerHTML = '';
+
+            let total = 0;
+
+            if (keranjang.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-gray-400">Keranjang belanja Anda masih kosong.</div>`;
+                document.getElementById('btnLanjutBayar').disabled = true;
+                document.getElementById('btnLanjutBayar').classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                document.getElementById('btnLanjutBayar').disabled = false;
+                document.getElementById('btnLanjutBayar').classList.remove('opacity-50', 'cursor-not-allowed');
+
+                keranjang.forEach(item => {
+                    const subtotal = item.harga * item.qty;
+                    total += subtotal;
+
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700/50 rounded-xl border dark:border-gray-700';
+                    div.innerHTML = `
+                        <div class="flex items-center space-x-3">
+                            <img src="${item.gambar}" class="w-12 h-12 object-cover rounded-lg">
+                            <div>
+                                <h4 class="font-bold text-sm text-gray-900 dark:text-white line-clamp-1">${item.nama}</h4>
+                                <p class="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">${formatRupiah(item.harga)}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="ubahQty(${item.id}, -1)" class="w-7 h-7 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-md font-bold flex items-center justify-center hover:bg-gray-300">-</button>
+                            <span class="text-sm font-bold w-4 text-center">${item.qty}</span>
+                            <button onclick="ubahQty(${item.id}, 1)" class="w-7 h-7 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white rounded-md font-bold flex items-center justify-center hover:bg-gray-300">+</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+            }
+
+            document.getElementById('totalKeranjang').innerText = formatRupiah(total);
+            document.getElementById('totalBayarText').innerText = formatRupiah(total);
+        }
+
+        function bukaModalKeranjang() {
+            document.getElementById('modalKeranjang').classList.remove('hidden');
+            document.getElementById('modalKeranjang').classList.add('flex');
+        }
+
+        function tutupModalKeranjang() {
+            document.getElementById('modalKeranjang').classList.add('hidden');
+            document.getElementById('modalKeranjang').classList.remove('flex');
+        }
+
+        // FUNGSI PEMBAYARAN & CHECKOUT
+        function bukaModalPembayaran() {
+            tutupModalKeranjang();
+            document.getElementById('modalPembayaran').classList.remove('hidden');
+            document.getElementById('modalPembayaran').classList.add('flex');
+        }
+
+        function tutupModalPembayaran() {
+            document.getElementById('modalPembayaran').classList.add('hidden');
+            document.getElementById('modalPembayaran').classList.remove('flex');
+        }
+
+        function prosesPembayaran(e) {
+            e.preventDefault();
+            const nama = document.getElementById('namaPembeli').value;
+            const alamat = document.getElementById('alamatPembeli').value;
+            const metode = document.getElementById('metodeBayar').value;
+            const total = keranjang.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+
+            const pesananBaru = {
+                idPesanan: 'ORD-' + Date.now().toString().slice(-6),
+                nama,
+                alamat,
+                metode,
+                total,
+                items: [...keranjang],
+                status: 'Dikemas', // Status Awal: Dikemas
+                tanggal: new Date().toLocaleDateString('id-ID', { hour: '2-digit', minute: '2-digit' })
+            };
+
+            dataPesanan.unshift(pesananBaru);
+            keranjang = [];
+            updateKeranjangUI();
+            tutupModalPembayaran();
+
+            // Atur simulasi pengiriman otomatis
+            simulasiPengiriman(pesananBaru.idPesanan);
+
+            alert(`Pembayaran Berhasil! Pesanan Anda [${pesananBaru.idPesanan}] sedang diproses.`);
+            bukaModalTracking();
+        }
+
+        // FUNGSI PELACAKAN PESANAN
+        function bukaModalTracking() {
+            renderDaftarPesanan();
+            document.getElementById('modalTracking').classList.remove('hidden');
+            document.getElementById('modalTracking').classList.add('flex');
+        }
+
+        function tutupModalTracking() {
+            document.getElementById('modalTracking').classList.add('hidden');
+            document.getElementById('modalTracking').classList.remove('flex');
+        }
+
+        function renderDaftarPesanan() {
+            const container = document.getElementById('daftarPesanan');
+            container.innerHTML = '';
+
+            if (dataPesanan.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-gray-400">Belum ada transaksi atau pesanan.</div>`;
+                return;
+            }
+
+            dataPesanan.forEach(order => {
+                const card = document.createElement('div');
+                card.className = 'p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl border dark:border-gray-700 space-y-3';
+                
+                let badgeStatusClass = 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300';
+                if(order.status === 'Dalam Pengiriman') badgeStatusClass = 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300';
+                if(order.status === 'Pesanan Selesai / Sampai') badgeStatusClass = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300';
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center border-b pb-2 dark:border-gray-600">
+                        <div>
+                            <span class="font-extrabold text-sm text-indigo-600 dark:text-indigo-400">${order.idPesanan}</span>
+                            <span class="text-xs text-gray-400 block">${order.tanggal}</span>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-full font-bold ${badgeStatusClass}">${order.status}</span>
+                    </div>
+
+                    <div class="space-y-1">
+                        ${order.items.map(item => `
+                            <div class="flex justify-between text-xs text-gray-600 dark:text-gray-300">
+                                <span>${item.nama} (x${item.qty})</span>
+                                <span>${formatRupiah(item.harga * item.qty)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Progress Bar Pelacakan -->
+                    <div class="pt-2">
+                        <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 overflow-hidden flex">
+                            <div class="h-full bg-emerald-500 transition-all duration-500 ${order.status === 'Dikemas' ? 'w-1/3' : order.status === 'Dalam Pengiriman' ? 'w-2/3' : 'w-full'}"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-gray-400 mt-1 font-semibold">
+                            <span>📦 Dikemas</span>
+                            <span>🚚 Pengiriman</span>
+                            <span>✅ Sampai</span>
+                        </div>
+                    </div>
+
+                    <div class="text-xs text-gray-500 dark:text-gray-400 pt-1">
+                        <strong>Penerima:</strong> ${order.nama} (${order.alamat})
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Simulasi otomatis perubahan status pesanan
+        function simulasiPengiriman(idPesanan) {
+            setTimeout(() => {
+                const pesanan = dataPesanan.find(p => p.idPesanan === idPesanan);
+                if (pesanan) {
+                    pesanan.status = 'Dalam Pengiriman';
+                    renderDaftarPesanan();
+                }
+            }, 7000); // Setelah 7 detik status berubah ke "Dalam Pengiriman"
+
+            setTimeout(() => {
+                const pesanan = dataPesanan.find(p => p.idPesanan === idPesanan);
+                if (pesanan) {
+                    pesanan.status = 'Pesanan Selesai / Sampai';
+                    renderDaftarPesanan();
+                }
+            }, 15000); // Setelah 15 detik status berubah ke "Pesanan Selesai / Sampai"
+        }
+
+        // FUNGSI TAMBAH, EDIT, & HAPUS PRODUK (ADMIN)
         function tambahProduk(e) {
             e.preventDefault();
             const nama = document.getElementById('nama').value;
@@ -400,7 +735,6 @@
             alert("barang telah ditambah");
         }
 
-        // Hapus Produk
         function hapusProduk(id) {
             if (confirm('Yakin ingin menghapus produk ini?')) {
                 dataProduk = dataProduk.filter(item => item.id !== id);
@@ -408,7 +742,6 @@
             }
         }
 
-        // Buka Modal Edit Produk
         function bukaModalEdit(id) {
             const item = dataProduk.find(p => p.id === id);
             if (!item) return;
@@ -429,7 +762,6 @@
             document.getElementById('modalEdit').classList.remove('flex');
         }
 
-        // Simpan Hasil Edit Produk
         function simpanEditProduk(e) {
             e.preventDefault();
             const id = parseInt(document.getElementById('editId').value);

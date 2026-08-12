@@ -3,803 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GadgetStore Pro - Premium E-Commerce</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        /* --- CSS VARIABLES & THEME --- */
-        :root {
-            --bg-body: #f1f5f9;
-            --bg-panel: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --input-bg: #f8fafc;
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --primary-light: #e0e7ff;
-            --accent-green: #10b981;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.02);
-            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-            --shadow-lg: 0 20px 30px -10px rgba(79, 70, 229, 0.15);
-            --radius-lg: 20px;
-            --radius-md: 12px;
-        }
-
-        .dark-mode {
-            --bg-body: #090d16;
-            --bg-panel: #131c2e;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #1e293b;
-            --input-bg: #0f172a;
-            --primary-light: rgba(79, 70, 229, 0.15);
-            --shadow-md: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 20px 30px -10px rgba(0, 0, 0, 0.5);
-        }
-
-        /* --- RESET & BASE STYLES --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, border-color 0.3s, transform 0.2s, box-shadow 0.2s; }
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding-bottom: 60px;
-            min-height: 100vh;
-        }
-
-        /* --- NAVBAR --- */
-        #navbar {
-            display: none; 
-            background-color: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 16px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .dark-mode #navbar {
-            background-color: rgba(19, 28, 46, 0.8);
-        }
-        .nav-left { display: flex; align-items: center; gap: 12px; }
-        .nav-brand { 
-            font-size: 20px; 
-            font-weight: 800; 
-            background: linear-gradient(135deg, #6366f1, #a855f7); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            cursor: pointer;
-        }
-        .nav-role-badge { 
-            padding: 4px 12px; 
-            border-radius: 99px; 
-            font-size: 12px; 
-            font-weight: 700; 
-            letter-spacing: 0.3px;
-        }
-        .nav-actions { display: flex; gap: 10px; align-items: center; }
-        .btn-theme { 
-            background: var(--input-bg); 
-            border: 1px solid var(--border-color); 
-            color: var(--text-main); 
-            width: 40px; 
-            height: 40px; 
-            border-radius: 50%; 
-            cursor: pointer; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .btn-theme:hover { transform: rotate(15deg); }
-        .btn-logout { 
-            background: #ef4444; 
-            color: white; 
-            border: none; 
-            padding: 10px 16px; 
-            border-radius: var(--radius-md); 
-            font-weight: 700; 
-            font-size: 13px; 
-            cursor: pointer; 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-logout:hover { background: #dc2626; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
-
-        /* --- CONTAINER --- */
-        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
-
-        /* --- LOGIN VIEW --- */
-        #view-login { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
-        .login-box { 
-            background: var(--bg-panel); 
-            padding: 40px 30px; 
-            border-radius: 24px; 
-            box-shadow: var(--shadow-lg); 
-            text-align: center; 
-            width: 100%; 
-            max-width: 480px; 
-            border: 1px solid var(--border-color); 
-            position: relative;
-            overflow: hidden;
-        }
-        .login-box::before {
-            content: '';
-            position: absolute;
-            top: -50px; left: -50px;
-            width: 100px; height: 100px;
-            background: var(--primary);
-            filter: blur(60px);
-            border-radius: 50%;
-            opacity: 0.5;
-        }
-        .login-box h1 { font-weight: 800; font-size: 28px; margin-bottom: 8px; letter-spacing: -0.5px; }
-        .login-box p { color: var(--text-muted); font-size: 15px; margin-bottom: 30px; }
-        .role-cards { display: flex; gap: 16px; }
-        @media (max-width: 480px) { .role-cards { flex-direction: column; } }
-        .role-card { 
-            flex: 1; 
-            border: 2px solid var(--border-color); 
-            border-radius: var(--radius-lg); 
-            padding: 24px 16px; 
-            cursor: pointer; 
-            background-color: var(--input-bg); 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .role-card:hover { 
-            transform: translateY(-4px); 
-            box-shadow: var(--shadow-md); 
-        }
-        .role-card.admin:hover { border-color: #6366f1; background-color: var(--primary-light); }
-        .role-card.user:hover { border-color: var(--accent-green); background-color: rgba(16, 185, 129, 0.1); }
-        .role-icon { margin-bottom: 12px; color: var(--text-main); }
-        .role-title { font-weight: 700; font-size: 16px; }
-
-        /* --- MODAL DIALOG --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 32px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: var(--shadow-lg);
-            text-align: center;
-            transform: scale(0.9);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .modal-overlay.active .modal-card {
-            transform: scale(1);
-        }
-        .modal-icon {
-            margin-bottom: 12px;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--primary);
-        }
-        .modal-title {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 6px;
-        }
-        .modal-subtitle {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 20px;
-        }
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        .btn-modal-cancel {
-            flex: 1;
-            background: var(--input-bg);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: var(--radius-md);
-            font-weight: 700;
-            cursor: pointer;
-        }
-        .btn-modal-confirm {
-            flex: 1;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: var(--radius-md);
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-        }
-
-        /* --- PANELS --- */
-        .panel { 
-            background: var(--bg-panel); 
-            padding: 30px; 
-            border-radius: 24px; 
-            box-shadow: var(--shadow-md); 
-            margin-bottom: 30px; 
-            border: 1px solid var(--border-color); 
-        }
-        .panel h2 { 
-            font-size: 20px; 
-            font-weight: 800; 
-            margin-bottom: 24px; 
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* --- FORM ELEMENTS --- */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-        }
-        .form-group { margin-bottom: 20px; }
-        .form-group.full-width { grid-column: 1 / -1; }
-        .form-group label { 
-            display: flex; 
-            align-items: center;
-            gap: 6px;
-            font-weight: 700; 
-            font-size: 13px; 
-            margin-bottom: 8px; 
-            color: var(--text-main); 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px; 
-        }
-        .form-control, .file-input { 
-            width: 100%; 
-            padding: 14px 16px; 
-            border: 1.5px solid var(--border-color); 
-            border-radius: var(--radius-md); 
-            font-family: inherit; 
-            font-size: 14px; 
-            background-color: var(--input-bg); 
-            color: var(--text-main); 
-        }
-        .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); }
-        .btn-submit { 
-            width: 100%; 
-            background: linear-gradient(135deg, var(--primary), #6366f1); 
-            color: white; 
-            padding: 16px; 
-            border: none; 
-            border-radius: var(--radius-md); 
-            font-weight: 700; 
-            cursor: pointer; 
-            font-size: 15px; 
-            box-shadow: var(--shadow-lg);
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .btn-submit:hover { opacity: 0.95; transform: translateY(-1px); }
-        .btn-cancel-edit {
-            width: 100%;
-            background: var(--input-bg);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 14px;
-            border-radius: var(--radius-md);
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 14px;
-            margin-top: 8px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        /* --- ADMIN LIST --- */
-        .admin-list-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 14px 18px; 
-            border: 1px solid var(--border-color); 
-            border-radius: var(--radius-md); 
-            margin-bottom: 12px; 
-            background: var(--input-bg); 
-        }
-        .admin-list-info { display: flex; align-items: center; gap: 14px; }
-        .admin-list-img { width: 48px; height: 48px; border-radius: 10px; object-fit: cover; }
-        .admin-list-title { font-weight: 700; font-size: 15px; }
-        .admin-actions-btns { display: flex; gap: 8px; }
-        .btn-edit-item { 
-            background: #e0e7ff; 
-            color: var(--primary); 
-            border: none; 
-            padding: 8px 14px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 13px; 
-            font-weight: 700; 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .dark-mode .btn-edit-item { background: rgba(79, 70, 229, 0.2); }
-        .btn-edit-item:hover { background: var(--primary); color: white; }
-        .btn-delete { 
-            background: #fee2e2; 
-            color: #ef4444; 
-            border: none; 
-            padding: 8px 14px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 13px; 
-            font-weight: 700; 
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .dark-mode .btn-delete { background: rgba(239, 68, 68, 0.2); }
-        .btn-delete:hover { background: #ef4444; color: white; }
-
-        /* --- ADMIN ORDERS LIST --- */
-        .order-card-admin {
-            border: 1px solid var(--border-color);
-            background: var(--input-bg);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-        .order-header-admin {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px dashed var(--border-color);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .order-id-tag {
-            font-weight: 800;
-            font-size: 13px;
-            color: var(--primary);
-            background: var(--primary-light);
-            padding: 4px 10px;
-            border-radius: 6px;
-        }
-        .order-body-admin {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-        @media (max-width: 600px) { .order-body-admin { grid-template-columns: 1fr; } }
-        .order-select-status {
-            font-weight: 700;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1.5px solid var(--border-color);
-            background: var(--bg-panel);
-            color: var(--text-main);
-            cursor: pointer;
-        }
-
-        /* --- KATALOG & SEARCH --- */
-        .search-container {
-            position: relative;
-            margin-bottom: 25px;
-        }
-        .search-icon-wrapper {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            pointer-events: none;
-        }
-        .search-bar { 
-            width: 100%; 
-            padding: 16px 20px 16px 48px; 
-            border-radius: 99px; 
-            border: 1.5px solid var(--border-color); 
-            background: var(--input-bg); 
-            color: var(--text-main); 
-            font-size: 15px; 
-            outline: none; 
-            box-shadow: var(--shadow-sm);
-        }
-        .search-bar:focus { border-color: var(--accent-green); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15); }
-
-        .katalog-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-        .empty-state { 
-            text-align: center; 
-            padding: 60px 20px; 
-            color: var(--text-muted); 
-            border: 2px dashed var(--border-color); 
-            border-radius: var(--radius-lg); 
-            grid-column: 1 / -1; 
-            font-size: 15px; 
-            font-weight: 500;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* --- PRODUCT CARD & VIDEO PLAYER --- */
-        .product-card { 
-            border: 1px solid var(--border-color); 
-            border-radius: var(--radius-lg); 
-            overflow: hidden; 
-            background: var(--bg-panel); 
-            display: flex; 
-            flex-direction: column; 
-            box-shadow: var(--shadow-sm);
-        }
-        .product-card:hover { 
-            transform: translateY(-6px); 
-            box-shadow: var(--shadow-md); 
-            border-color: rgba(99, 102, 241, 0.3);
-        }
-        .product-img-wrapper { position: relative; width: 100%; height: 220px; overflow: hidden; background: var(--input-bg); }
-        .product-img { width: 100%; height: 100%; object-fit: cover; }
-        .product-badge { 
-            position: absolute; 
-            top: 12px; left: 12px; 
-            background: rgba(15, 23, 42, 0.75); 
-            backdrop-filter: blur(8px);
-            color: white; 
-            padding: 4px 10px; 
-            border-radius: 99px; 
-            font-size: 11px; 
-            font-weight: 700; 
-            letter-spacing: 0.5px;
-            z-index: 2;
-        }
-        .product-info { padding: 20px; display: flex; flex-direction: column; flex-grow: 1; }
-        .product-name { font-weight: 800; font-size: 18px; margin-bottom: 4px; line-height: 1.3; }
-        .product-price { font-weight: 800; color: var(--accent-green); font-size: 20px; margin-bottom: 12px; }
-        .product-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; flex-grow: 1; line-height: 1.6; word-wrap: break-word; }
-        
-        /* CONTAINER UNTUK YOUTUBE EMBED RESPONSIVE */
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* Rasio 16:9 */
-            height: 0;
-            background: #000;
-            border-radius: var(--radius-md);
-            margin-bottom: 16px;
-            overflow: hidden;
-        }
-        .product-video { 
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%; 
-            height: 100%; 
-            border: none;
-        }
-
-        .btn-buy { 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            text-align: center; 
-            background: var(--accent-green); 
-            color: white; 
-            padding: 14px; 
-            border-radius: var(--radius-md); 
-            border: none;
-            font-weight: 700; 
-            font-size: 14px; 
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
-        }
-        .btn-buy:hover { opacity: 0.9; }
-
-        /* --- CHECKOUT & STATUS SHIPPING --- */
-        .checkout-summary {
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            display: flex;
-            gap: 16px;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-        .checkout-img { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; }
-        
-        .status-card {
-            border: 2px dashed var(--accent-green);
-            background: rgba(16, 185, 129, 0.05);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--accent-green);
-            color: white;
-            padding: 6px 16px;
-            border-radius: 99px;
-            font-weight: 700;
-            font-size: 13px;
-            margin-bottom: 12px;
-        }
-        .btn-back {
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 10px 18px;
-            border-radius: var(--radius-md);
-            font-weight: 700;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 20px;
-        }
-
-        /* --- TOAST NOTIFICATION --- */
-        #toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 12px; }
-        .toast { 
-            background: var(--bg-panel); 
-            color: var(--text-main); 
-            padding: 14px 20px; 
-            border-radius: var(--radius-md); 
-            font-size: 14px; 
-            font-weight: 600; 
-            box-shadow: var(--shadow-lg); 
-            opacity: 0; 
-            transform: translateX(50px); 
-            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .toast.show { opacity: 1; transform: translateX(0); }
-        .toast.success { border-left: 4px solid var(--accent-green); }
-        .toast.error { border-left: 4px solid #ef4444; }
-    </style>
-    <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body>
-
-    <!-- NAVBAR -->
-    <nav id="navbar">
-        <div class="nav-left">
-            <div class="nav-brand" onclick="goHome()">GadgetStore</div>
-            <div class="nav-role-badge" id="navRoleText">Role</div>
-        </div>
-        <div class="nav-actions">
-            <button class="btn-theme" id="btnTheme" onclick="toggleTheme()" title="Ubah Tema">
-                <i data-lucide="moon" id="themeIcon"></i>
-            </button>
-            <button class="btn-logout" onclick="logout()">
-                <i data-lucide="log-out" size="16"></i>
-                <span>Logout</span>
-            </button>
-        </div>
-    </nav>
-
-    <!-- TOAST CONTAINER -->
-    <div id="toast-container"></div>
-
-    <!-- MODAL POP-UP ADMIN PASSWORD -->
-    <div class="modal-overlay" id="adminAuthModal">
-        <div class="modal-card">
-            <div class="modal-icon">
-                <i data-lucide="lock" size="44"></i>
-            </div>
-            <div class="modal-title">Akses Admin</div>
-            <div class="modal-subtitle">Klik Masuk untuk melanjutkan</div>
-            <input type="password" id="adminPasswordInput" class="form-control" placeholder="Masukkan password..." style="text-align: center;">
-            <div class="modal-actions">
-                <button class="btn-modal-cancel" onclick="closeAdminModal()">Batal</button>
-                <button class="btn-modal-confirm" onclick="verifyAdminPassword()">Masuk</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        
-        <!-- ==================== VIEW 1: LOGIN ==================== -->
-        <div id="view-login">
-            <div class="login-box">
-                <h1>GadgetStore Pro</h1>
-                <p>Silakan pilih akses peran Anda</p>
-                <div class="role-cards">
-                    <div class="role-card admin" onclick="login('admin')">
-                        <i data-lucide="shield-check" size="40" class="role-icon"></i>
-                        <div class="role-title">Admin Store</div>
-                    </div>
-                    <div class="role-card user" onclick="login('user')">
-                        <i data-lucide="shopping-bag" size="40" class="role-icon"></i>
-                        <div class="role-title">Pembeli</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== VIEW 2: ADMIN ==================== -->
-        <div id="view-admin" style="display: none;">
-            <!-- Panel Kelola Pesanan & Status -->
-            <div class="panel">
-                <h2><i data-lucide="shopping-bag" size="22"></i> Kelola Pesanan Masuk</h2>
-                <div id="adminOrdersList"></div>
-            </div>
-
-            <div class="panel">
-                <h2 id="formPanelTitle"><i data-lucide="plus-circle" size="22"></i> Tambah Produk Baru</h2>
-                <form id="adminForm">
-                    <input type="hidden" id="editProductId" value="">
-                    
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Nama Produk</label>
-                            <input type="text" id="prodName" class="form-control" required placeholder="Cth: MacBook Pro M3">
-                        </div>
-                        <div class="form-group">
-                            <label>Harga Produk (IDR)</label>
-                            <input type="number" id="prodPrice" class="form-control" required placeholder="Cth: 25000000">
-                        </div>
-                    </div>
-                    <div class="form-group full-width">
-                        <label>Spesifikasi / Deskripsi Singkat</label>
-                        <textarea id="prodDesc" class="form-control" rows="3" required placeholder="Jelaskan keunggulan produk..."></textarea>
-                    </div>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label><i data-lucide="image" size="16"></i> Foto Produk <small id="imgHelpText" style="color:var(--text-muted); text-transform:none; font-weight:normal;"></small></label>
-                            <input type="file" id="prodImg" class="file-input" accept="image/*">
-                        </div>
-                        <div class="form-group">
-                            <label><i data-lucide="video" size="16"></i> Link Embed YouTube <small id="vidHelpText" style="color:var(--text-muted); text-transform:none; font-weight:normal;"></small></label>
-                            <input type="url" id="prodVid" class="form-control" placeholder="https://www.youtube.com/embed/VIDEO_ID">
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit" id="btnSubmitForm">
-                        <i data-lucide="send" size="18"></i> <span id="btnSubmitText">Publikasikan Produk</span>
-                    </button>
-                    <button type="button" class="btn-cancel-edit" id="btnCancelEdit" onclick="cancelEditMode()">
-                        <i data-lucide="x" size="18"></i> Batal Edit
-                    </button>
-                </form>
-            </div>
-
-            <div class="panel">
-                <h2><i data-lucide="package" size="22"></i> Kelola Produk Terunggah</h2>
-                <div id="adminProductList"></div>
-            </div>
-        </div>
-
-        <!-- ==================== VIEW 3: PEMBELI ==================== -->
-        <div id="view-user" style="display: none;">
-            <div class="panel">
-                <h2><i data-lucide="store" size="22"></i> Katalog Gadget Pilihan</h2>
-                
-                <div class="search-container">
-                    <div class="search-icon-wrapper">
-                        <i data-lucide="search" size="18"></i>
-                    </div>
-                    <input type="text" id="searchBar" class="search-bar" placeholder="Cari gadget impian Anda..." oninput="renderKatalog()">
-                </div>
-                
-                <div class="katalog-grid" id="katalogGrid"></div>
-            </div>
-        </div>
-
-        <!-- ==================== VIEW 4: PEMBAYARAN & STATUS ==================== -->
-        <div id="view-checkout" style="display: none;">
-            <button class="btn-back" onclick="goBackToCatalog()">
-                <i data-lucide="arrow-left" size="18"></i> Kembali ke Katalog
-            </button>
-            
-            <div class="panel">
-                <h2><i data-lucide="credit-card" size="22"></i> Halaman Pembayaran</h2>
-                
-                <!-- Ringkasan Produk -->
-                <div class="checkout-summary" id="checkoutProductInfo"></div>
-
-                <!-- Form Alamat dan Metode Pembayaran -->
-                <form id="checkoutForm" onsubmit="processPayment(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Nama Penerima</label>
-                            <input type="text" id="buyerName" class="form-control" required placeholder="Cth: Budi Santoso">
-                        </div>
-                        <div class="form-group">
-                            <label>Nomor Telepon/WA</label>
-                            <input type="tel" id="buyerPhone" class="form-control" required placeholder="Cth: 081234567890">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group full-width">
-                        <label>Alamat Lengkap Pengiriman</label>
-                        <textarea id="buyerAddress" class="form-control" rows="3" required placeholder="Masukkan nama jalan, nomor rumah, kecamatan, kota, dan kode pos..."></textarea>
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label>Metode Pembayaran</label>
-                        <select class="form-control" required>
-                            <option value="">-- Pilih Metode Pembayaran --</option>
-                            <option value="qris">QRIS / Instant Payment</option>
-                            <option value="bank">Transfer Bank (BCA/Mandiri/BRI)</option>
-                            <option value="cod">Bayar di Tempat (COD)</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn-submit">
-                        <i data-lucide="check-circle" size="18"></i> Konfirmasi & Bayar Sekarang
-                    </button>
-                </form>
-
-                <!-- Status Pengiriman -->
-                <div id="shippingStatusArea" style="display: none;">
-                    <div class="status-card">
-                        <div class="status-badge" id="buyerStatusBadge">
-                            <i data-lucide="truck" size="16"></i> <span id="buyerStatusText">Dalam Pengiriman</span>
-                        </div>
-                        <h3 style="font-size: 18px; margin-bottom: 8px;">Status Pesanan Anda</h3>
-                        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">
-                            Barang <strong id="statusProdName">Gadget</strong> sedang ditangani oleh penjual:
-                        </p>
-                        <div style="background: var(--bg-panel); padding: 16px; border-radius: var(--radius-md); text-align: left; border: 1px solid var(--border-color); font-size: 14px; line-height: 1.6;">
-                            <p><strong>ID Pesanan:</strong> <span id="statusOrderId">-</span></p>
-                            <p><strong>Penerima:</strong> <span id="statusName">-</span> (<span id="statusPhone">-</span>)</p>
-                            <p><strong>Alamat Tujuan:</strong></p>
-                            <p id="statusAddress" style="color: var(--text-muted);">-</p>
-                            <hr style="margin: 12px 0; border: none; border-top: 1px solid var(--border-color);">
-                            <p><strong>Estimasi Tiba:</strong> 1 - 3 Hari Kerja</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
+    <title>GadgetStore</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        /* YOUTUBE EMBED URL SESUAI RESMI DENGAN BARANG ELEKTRONIK */
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300 min-h-screen">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 bg-white dark:bg-gray-800 shadow-md transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">GadgetStore</h1>
+            
+            <div class="flex items-center space-x-3">
+                <!-- Toggle Mode Pembeli / Admin -->
+                <button id="toggleModeBtn" onclick="toggleModeRole()" class="px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 hover:opacity-80 transition">
+                    Mode Pembeli
+                </button>
+
+                <!-- Toggle Dark / Light Theme -->
+                <button onclick="toggleTheme()" class="p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+                    <svg id="themeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                    </svg>
+                </button>
+
+                <!-- Tombol Logout -->
+                <button class="flex items-center space-x-1 bg-rose-500 hover:bg-rose-600 text-white px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                    </svg>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Fitur Khusus Mode Admin: Tambah Produk -->
+        <div id="adminPanel" class="hidden mb-8 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md border border-indigo-200 dark:border-indigo-900">
+            <h2 class="text-xl font-bold mb-4 text-indigo-600 dark:text-indigo-400">Tambah Produk Baru (Admin)</h2>
+            <form id="formTambahProduk" onsubmit="tambahProduk(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" id="nama" placeholder="Nama Produk" required class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <input type="number" id="harga" placeholder="Harga (Rp)" required class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <input type="url" id="gambar" placeholder="URL Gambar Produk" required class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <input type="url" id="video" placeholder="URL Embed / Watch YouTube" class="p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <textarea id="deskripsi" placeholder="Deskripsi Produk" rows="2" class="md:col-span-2 p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"></textarea>
+                <button type="submit" class="md:col-span-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg transition">Simpan Produk</button>
+            </form>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="mb-8 max-w-xl mx-auto">
+            <div class="relative">
+                <input type="text" id="searchInput" oninput="renderProduk()" placeholder="Cari gadget impian Anda..." class="w-full pl-10 pr-4 py-3 rounded-full border border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:ring-2 focus:ring-indigo-500 outline-none transition">
+                <svg class="w-5 h-5 absolute left-3 top-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Grid Katalog Produk -->
+        <div id="produkGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </main>
+
+    <!-- Modal Edit Produk -->
+    <div id="modalEdit" class="fixed inset-0 bg-black/50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl max-w-lg w-full p-6 shadow-2xl border border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-bold mb-4 text-indigo-600 dark:text-indigo-400">Edit Produk</h3>
+            <form id="formEditProduk" onsubmit="simpanEditProduk(event)" class="space-y-3">
+                <input type="hidden" id="editId">
+                <input type="text" id="editNama" required class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <input type="number" id="editHarga" required class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <input type="url" id="editGambar" required class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <input type="url" id="editVideo" class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600">
+                <textarea id="editDeskripsi" rows="3" class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600"></textarea>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="tutupModalEdit()" class="px-4 py-2 rounded-lg bg-gray-300 dark:bg-gray-600 hover:opacity-80">Batal</button>
+                    <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script JavaScript -->
+    <script>
+        // Data Produk Utama dengan Video Embed Valid
         let dataProduk = [
             {
                 id: 101,
@@ -807,7 +102,7 @@
                 harga: 39999000,
                 deskripsi: "Chipset M3 Max 16-Core, RAM 36GB, SSD 1TB. Performa super kencang untuk rendering 3D, editing video 8K, dan komputasi berat.",
                 gambar: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
-                video: "https://www.youtube.com/embed/0kQI32I382A" /* YouTube Trailer MacBook Pro M3 */
+                video: "https://www.youtube.com/embed/f4g2nPY-68c"
             },
             {
                 id: 102,
@@ -815,7 +110,7 @@
                 harga: 24999000,
                 deskripsi: "Bodi Titanium kelas penerbangan, Chipset A17 Pro, Kamera Utama 48MP dengan 5x Optical Zoom, serta port USB-C kencang.",
                 gambar: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80",
-                video: "https://www.youtube.com/embed/xqyUdNxWazA" /* YouTube Trailer iPhone 15 Pro */
+                video: "https://www.youtube.com/embed/c4T4g0XFp7k"
             },
             {
                 id: 103,
@@ -823,7 +118,7 @@
                 harga: 5999000,
                 deskripsi: "Headphone Noise Cancelling nirkabel terbaik di kelasnya. Baterai tahan hingga 30 jam, mikrofon jernih, dan Audio Hi-Res.",
                 gambar: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
-                video: "https://www.youtube.com/embed/d3_14W-sBms" /* YouTube Video Sony WH-1000XM5 */
+                video: "https://www.youtube.com/embed/A8SIsE_GIs8"
             },
             {
                 id: 104,
@@ -831,7 +126,7 @@
                 harga: 18499000,
                 deskripsi: "Layar Liquid Retina XDR Mini-LED, ditenagai Chip M2 super cepat, fitur Apple Pencil Hover, dan port Thunderbolt.",
                 gambar: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=800&q=80",
-                video: "https://www.youtube.com/embed/yUKRkyaXcps" /* YouTube Trailer iPad Pro M2 */
+                video: "https://www.youtube.com/embed/bS10vA4W1XQ"
             },
             {
                 id: 105,
@@ -839,484 +134,169 @@
                 harga: 21999000,
                 deskripsi: "Dilengkapi Galaxy AI, S-Pen terintegrasi, Kamera 200MP dengan Space Zoom 100x, dan Snapdragon 8 Gen 3 for Galaxy.",
                 gambar: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800&q=80",
-                video: "https://www.youtube.com/embed/_yL3A5o3Fz8" /* YouTube Trailer Samsung S24 Ultra */
+                video: "https://www.youtube.com/embed/0J3X_1U_B4k"
             }
         ];
 
-        let dataPesanan = [];
-        let selectedProductForCheckout = null;
-        let currentActiveOrder = null;
+        let isAdmin = false;
 
-        function initIcons() {
-            lucide.createIcons();
+        // Fungsi Helper Konversi URL YouTube ke Format Embed
+        function fixYouTubeUrl(url) {
+            if (!url) return '';
+            if (url.includes("watch?v=")) {
+                return "https://www.youtube.com/embed/" + url.split("v=")[1].split("&")[0];
+            } else if (url.includes("youtu.be/")) {
+                return "https://www.youtube.com/embed/" + url.split("youtu.be/")[1].split("?")[0];
+            }
+            return url;
         }
 
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            const iconName = type === 'success' ? 'check-circle' : 'alert-circle';
-            
-            toast.innerHTML = `<i data-lucide="${iconName}" size="18"></i> <span>${message}</span>`;
-            
-            container.appendChild(toast);
-            lucide.createIcons({ targets: [toast] });
-
-            setTimeout(() => toast.classList.add('show'), 10);
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+        // Format Rupiah
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(angka);
         }
 
-        let isDarkMode = false;
+        // Toggle Dark Theme
         function toggleTheme() {
-            const body = document.body;
-            const themeIcon = document.getElementById('themeIcon');
-            isDarkMode = !isDarkMode;
-            
-            if (isDarkMode) {
-                body.classList.add('dark-mode');
-                themeIcon.setAttribute('data-lucide', 'sun');
+            document.documentElement.classList.toggle('dark');
+        }
+
+        // Toggle Role Pembeli / Admin
+        function toggleModeRole() {
+            isAdmin = !isAdmin;
+            const btn = document.getElementById('toggleModeBtn');
+            const adminPanel = document.getElementById('adminPanel');
+
+            if (isAdmin) {
+                btn.innerText = 'Mode Admin';
+                btn.className = 'px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200 hover:opacity-80 transition';
+                adminPanel.classList.remove('hidden');
             } else {
-                body.classList.remove('dark-mode');
-                themeIcon.setAttribute('data-lucide', 'moon');
+                btn.innerText = 'Mode Pembeli';
+                btn.className = 'px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 hover:opacity-80 transition';
+                adminPanel.classList.add('hidden');
             }
-            lucide.createIcons();
+            renderProduk();
         }
 
-        function showView(viewId) {
-            document.getElementById('view-login').style.display = 'none';
-            document.getElementById('view-admin').style.display = 'none';
-            document.getElementById('view-user').style.display = 'none';
-            document.getElementById('view-checkout').style.display = 'none';
-            document.getElementById(viewId).style.display = 'block';
-        }
-
-        function goHome() {
-            const currentRole = document.getElementById('navRoleText').innerText;
-            if (currentRole.includes("Admin")) {
-                showView('view-admin');
-            } else if (currentRole.includes("Pembeli")) {
-                showView('view-user');
-            }
-        }
-
-        /* MODAL POP-UP ADMIN (AUTO-FILL PASSWORD) */
-        function openAdminModal() {
-            const modal = document.getElementById('adminAuthModal');
-            const input = document.getElementById('adminPasswordInput');
-            input.value = 'admin123';
-            modal.classList.add('active');
-            setTimeout(() => input.focus(), 100);
-        }
-
-        function closeAdminModal() {
-            const modal = document.getElementById('adminAuthModal');
-            modal.classList.remove('active');
-        }
-
-        function verifyAdminPassword() {
-            const input = document.getElementById('adminPasswordInput').value;
-            if (input === "admin123") {
-                closeAdminModal();
-                const badge = document.getElementById('navRoleText');
-                document.getElementById('navbar').style.display = 'flex';
-                badge.innerText = "Mode Admin";
-                badge.style.backgroundColor = "var(--primary-light)";
-                badge.style.color = "var(--primary)";
-                showView('view-admin');
-                renderAdminList();
-                renderAdminOrders();
-                showToast("Login Admin Berhasil!");
-            } else {
-                showToast("Password Salah!", "error");
-            }
-        }
-
-        document.getElementById('adminPasswordInput').addEventListener('keyup', function(e) {
-            if (e.key === 'Enter') verifyAdminPassword();
-        });
-
-        function login(role) {
-            const badge = document.getElementById('navRoleText');
-            
-            if (role === 'admin') {
-                openAdminModal();
-            } 
-            else if (role === 'user') {
-                document.getElementById('navbar').style.display = 'flex';
-                badge.innerText = "Mode Pembeli";
-                badge.style.backgroundColor = "rgba(16, 185, 129, 0.15)";
-                badge.style.color = "var(--accent-green)";
-                document.getElementById('searchBar').value = '';
-                showView('view-user');
-                renderKatalog();
-                showToast("Selamat Datang di Katalog!");
-            }
-        }
-
-        function logout() {
-            document.getElementById('navbar').style.display = 'none';
-            showView('view-login');
-        }
-
-        function getBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-        }
-
-        /* MANAJEMEN FORM & EDIT PRODUK */
-        function setFormRequired(isRequired) {
-            document.getElementById('prodImg').required = isRequired;
-        }
-        
-        setFormRequired(true);
-
-        function startEditProduct(id) {
-            const produk = dataProduk.find(p => p.id === id);
-            if (!produk) return;
-
-            document.getElementById('editProductId').value = produk.id;
-            document.getElementById('prodName').value = produk.nama;
-            document.getElementById('prodPrice').value = produk.harga;
-            document.getElementById('prodDesc').value = produk.deskripsi;
-            document.getElementById('prodVid').value = produk.video || '';
-
-            setFormRequired(false);
-
-            document.getElementById('formPanelTitle').innerHTML = `<i data-lucide="edit-3" size="22"></i> Edit Produk`;
-            document.getElementById('btnSubmitText').innerText = "Simpan Perubahan";
-            document.getElementById('imgHelpText').innerText = "(Kosongkan jika tidak ingin mengubah foto)";
-            document.getElementById('btnCancelEdit').style.display = "flex";
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            lucide.createIcons();
-        }
-
-        function cancelEditMode() {
-            document.getElementById('editProductId').value = '';
-            document.getElementById('adminForm').reset();
-            setFormRequired(true);
-
-            document.getElementById('formPanelTitle').innerHTML = `<i data-lucide="plus-circle" size="22"></i> Tambah Produk Baru`;
-            document.getElementById('btnSubmitText').innerText = "Publikasikan Produk";
-            document.getElementById('imgHelpText').innerText = "";
-            document.getElementById('btnCancelEdit').style.display = "none";
-            lucide.createIcons();
-        }
-
-        document.getElementById('adminForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const editId = document.getElementById('editProductId').value;
-            const submitBtn = document.getElementById('btnSubmitForm');
-            submitBtn.disabled = true;
-
-            try {
-                const name = document.getElementById('prodName').value;
-                const price = document.getElementById('prodPrice').value;
-                const desc = document.getElementById('prodDesc').value;
-                let vidUrl = document.getElementById('prodVid').value || "https://www.youtube.com/embed/dQw4w9WgXcQ";
-                const imgFile = document.getElementById('prodImg').files[0];
-
-                // Jika user menginputkan link youtube standar biasa, otomatis dikonversi ke embed URL
-                if (vidUrl.includes("watch?v=")) {
-                    vidUrl = vidUrl.replace("watch?v=", "embed/");
-                } else if (vidUrl.includes("youtu.be/")) {
-                    vidUrl = vidUrl.replace("youtu.be/", "www.youtube.com/embed/");
-                }
-
-                if (editId) {
-                    const index = dataProduk.findIndex(p => p.id == editId);
-                    if (index !== -1) {
-                        dataProduk[index].nama = name;
-                        dataProduk[index].harga = Number(price);
-                        dataProduk[index].deskripsi = desc;
-                        dataProduk[index].video = vidUrl;
-
-                        if (imgFile) {
-                            dataProduk[index].gambar = await getBase64(imgFile);
-                        }
-
-                        showToast('Perubahan Produk Berhasil Disimpan!');
-                        cancelEditMode();
-                    }
-                } else {
-                    if (!imgFile) {
-                        showToast('Foto wajib diisi untuk produk baru!', 'error');
-                        submitBtn.disabled = false;
-                        return;
-                    }
-
-                    const imgURL = await getBase64(imgFile);
-
-                    dataProduk.unshift({
-                        id: Date.now(),
-                        nama: name,
-                        harga: Number(price),
-                        deskripsi: desc,
-                        gambar: imgURL,
-                        video: vidUrl
-                    });
-
-                    document.getElementById('adminForm').reset();
-                    showToast('Produk Berhasil Diterbitkan!');
-                }
-
-                renderAdminList();
-            } catch (error) {
-                showToast('Gagal memproses data.', 'error');
-            } finally {
-                submitBtn.disabled = false;
-                lucide.createIcons();
-            }
-        });
-
-        function deleteProduct(id) {
-            if(confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
-                if (document.getElementById('editProductId').value == id) {
-                    cancelEditMode();
-                }
-                dataProduk = dataProduk.filter(produk => produk.id !== id);
-                renderAdminList();
-                showToast("Produk berhasil dihapus", "success");
-            }
-        }
-
-        function renderAdminList() {
-            const list = document.getElementById('adminProductList');
-            list.innerHTML = '';
-
-            if (dataProduk.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-state">
-                        <i data-lucide="inbox" size="36"></i>
-                        <span>Belum ada produk yang diunggah.</span>
-                    </div>`;
-                lucide.createIcons();
-                return;
-            }
-
-            dataProduk.forEach(function(produk) {
-                const item = document.createElement('div');
-                item.className = 'admin-list-item';
-                item.innerHTML = `
-                    <div class="admin-list-info">
-                        <img src="${produk.gambar}" class="admin-list-img" alt="Thumbnail">
-                        <div class="admin-list-title">${produk.nama}</div>
-                    </div>
-                    <div class="admin-actions-btns">
-                        <button class="btn-edit-item" onclick="startEditProduct(${produk.id})">
-                            <i data-lucide="edit" size="16"></i> Edit
-                        </button>
-                        <button class="btn-delete" onclick="deleteProduct(${produk.id})">
-                            <i data-lucide="trash-2" size="16"></i> Hapus
-                        </button>
-                    </div>
-                `;
-                list.appendChild(item);
-            });
-            lucide.createIcons();
-        }
-
-        /* MANAJEMEN STATUS PESANAN ADMIN */
-        function updateOrderStatus(orderId, newStatus) {
-            const order = dataPesanan.find(o => o.id === orderId);
-            if (order) {
-                order.status = newStatus;
-                showToast(`Status pesanan #${orderId} diperbarui: ${newStatus}`);
-                
-                if (currentActiveOrder && currentActiveOrder.id === orderId) {
-                    currentActiveOrder.status = newStatus;
-                    updateBuyerStatusUI(newStatus);
-                }
-            }
-        }
-
-        function renderAdminOrders() {
-            const container = document.getElementById('adminOrdersList');
+        // Render List Produk
+        function renderProduk() {
+            const container = document.getElementById('produkGrid');
+            const keyword = document.getElementById('searchInput').value.toLowerCase();
             container.innerHTML = '';
 
-            if (dataPesanan.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i data-lucide="clipboard-list" size="36"></i>
-                        <span>Belum ada pesanan masuk dari pembeli.</span>
-                    </div>`;
-                lucide.createIcons();
-                return;
-            }
+            const filteredData = dataProduk.filter(item => 
+                item.nama.toLowerCase().includes(keyword) || 
+                item.deskripsi.toLowerCase().includes(keyword)
+            );
 
-            dataPesanan.forEach(order => {
-                const orderCard = document.createElement('div');
-                orderCard.className = 'order-card-admin';
-                
-                const hargaRupiah = new Intl.NumberFormat('id-ID', {
-                    style: 'currency', currency: 'IDR', minimumFractionDigits: 0
-                }).format(order.produk.harga);
-
-                orderCard.innerHTML = `
-                    <div class="order-header-admin">
-                        <span class="order-id-tag">ID: #${order.id}</span>
-                        <div>
-                            <label style="font-weight: 700; font-size: 13px; margin-right: 8px;">Status Pesanan:</label>
-                            <select class="order-select-status" onchange="updateOrderStatus(${order.id}, this.value)">
-                                <option value="Menunggu Konfirmasi" ${order.status === 'Menunggu Konfirmasi' ? 'selected' : ''}>Menunggu Konfirmasi</option>
-                                <option value="Diproses" ${order.status === 'Diproses' ? 'selected' : ''}>Diproses Penjual</option>
-                                <option value="Dalam Pengiriman" ${order.status === 'Dalam Pengiriman' ? 'selected' : ''}>Dalam Pengiriman</option>
-                                <option value="Selesai" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai / Diterima</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="order-body-admin">
-                        <div>
-                            <p style="font-weight: 800; font-size: 15px;">${order.produk.nama}</p>
-                            <p style="color: var(--accent-green); font-weight: 700;">${hargaRupiah}</p>
-                        </div>
-                        <div style="font-size: 13px; line-height: 1.5;">
-                            <p><strong>Penerima:</strong> ${order.nama} (${order.telepon})</p>
-                            <p><strong>Alamat:</strong> ${order.alamat}</p>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(orderCard);
-            });
-            lucide.createIcons();
-        }
-
-        /* RENDER KATALOG PEMBELI */
-        function renderKatalog() {
-            const grid = document.getElementById('katalogGrid');
-            const keyword = document.getElementById('searchBar').value.toLowerCase();
-            grid.innerHTML = '';
-
-            const filteredData = dataProduk.filter(produk => produk.nama.toLowerCase().includes(keyword));
-
-            if (filteredData.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state">
-                        <i data-lucide="search-x" size="36"></i>
-                        <span>Tidak ada gadget yang cocok dengan pencarian Anda.</span>
-                    </div>`;
-                lucide.createIcons();
-                return;
-            }
-
-            filteredData.forEach(function(produk) {
-                const hargaRupiah = new Intl.NumberFormat('id-ID', {
-                    style: 'currency', currency: 'IDR', minimumFractionDigits: 0
-                }).format(produk.harga);
-
+            filteredData.forEach(item => {
                 const card = document.createElement('div');
-                card.className = 'product-card';
+                card.className = 'bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-700 flex flex-col justify-between transition hover:shadow-xl';
+
                 card.innerHTML = `
-                    <div class="product-img-wrapper">
-                        <span class="product-badge">Ready Stock</span>
-                        <img src="${produk.gambar}" class="product-img" alt="${produk.nama}">
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">${produk.nama}</div>
-                        <div class="product-price">${hargaRupiah}</div>
-                        <div class="product-desc">${produk.deskripsi}</div>
-                        
-                        <!-- IFRAME YOUTUBE DENGAN RESPONSIF LAYAR -->
-                        <div class="video-container">
-                            <iframe class="product-video" 
-                                    src="${produk.video}" 
-                                    title="${produk.nama}" 
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                    allowfullscreen>
-                            </iframe>
+                    <div>
+                        <div class="relative h-48 overflow-hidden bg-gray-100 dark:bg-gray-900">
+                            <img src="${item.gambar}" alt="${item.nama}" class="w-full h-full object-cover">
+                            <span class="absolute top-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded-md font-medium">Ready Stock</span>
                         </div>
-                        
-                        <button class="btn-buy" onclick="goToCheckout(${produk.id})">
-                            <i data-lucide="shopping-cart" size="18"></i> Beli Sekarang
-                        </button>
+                        <div class="p-5">
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">${item.nama}</h3>
+                            <p class="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mb-3">${formatRupiah(item.harga)}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">${item.deskripsi}</p>
+                            
+                            ${item.video ? `
+                                <div class="relative w-full aspect-video rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 mb-4 bg-black">
+                                    <iframe src="${item.video}" title="${item.nama}" class="w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="p-5 pt-0">
+                        ${isAdmin ? `
+                            <div class="flex space-x-2">
+                                <button onclick="bukaModalEdit(${item.id})" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white py-2 rounded-lg font-medium text-sm transition">Edit</button>
+                                <button onclick="hapusProduk(${item.id})" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white py-2 rounded-lg font-medium text-sm transition">Hapus</button>
+                            </div>
+                        ` : `
+                            <button class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg font-semibold flex items-center justify-center space-x-2 transition">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"></path></svg>
+                                <span>Beli Sekarang</span>
+                            </button>
+                        `}
                     </div>
                 `;
-                grid.appendChild(card);
+                container.appendChild(card);
+            });
+        }
+
+        // Tambah Produk
+        function tambahProduk(e) {
+            e.preventDefault();
+            const nama = document.getElementById('nama').value;
+            const harga = parseInt(document.getElementById('harga').value);
+            const gambar = document.getElementById('gambar').value;
+            const video = fixYouTubeUrl(document.getElementById('video').value);
+            const deskripsi = document.getElementById('deskripsi').value;
+
+            dataProduk.unshift({
+                id: Date.now(),
+                nama, harga, gambar, video, deskripsi
             });
 
-            lucide.createIcons();
+            document.getElementById('formTambahProduk').reset();
+            renderProduk();
         }
 
-        /* CHECKOUT & ISI ALAMAT */
-        function goToCheckout(productId) {
-            selectedProductForCheckout = dataProduk.find(p => p.id === productId);
-            if (!selectedProductForCheckout) return;
-
-            const hargaRupiah = new Intl.NumberFormat('id-ID', {
-                style: 'currency', currency: 'IDR', minimumFractionDigits: 0
-            }).format(selectedProductForCheckout.harga);
-
-            const infoContainer = document.getElementById('checkoutProductInfo');
-            infoContainer.innerHTML = `
-                <img src="${selectedProductForCheckout.gambar}" class="checkout-img">
-                <div>
-                    <h3 style="font-size: 16px; font-weight: 800;">${selectedProductForCheckout.nama}</h3>
-                    <p style="color: var(--accent-green); font-weight: 800; font-size: 16px;">${hargaRupiah}</p>
-                </div>
-            `;
-
-            document.getElementById('checkoutForm').reset();
-            document.getElementById('checkoutForm').style.display = 'block';
-            document.getElementById('shippingStatusArea').style.display = 'none';
-
-            showView('view-checkout');
-            lucide.createIcons();
+        // Hapus Produk
+        function hapusProduk(id) {
+            if (confirm('Yakin ingin menghapus produk ini?')) {
+                dataProduk = dataProduk.filter(item => item.id !== id);
+                renderProduk();
+            }
         }
 
-        function goBackToCatalog() {
-            showView('view-user');
+        // Modal Edit
+        function bukaModalEdit(id) {
+            const item = dataProduk.find(p => p.id === id);
+            if (!item) return;
+
+            document.getElementById('editId').value = item.id;
+            document.getElementById('editNama').value = item.nama;
+            document.getElementById('editHarga').value = item.harga;
+            document.getElementById('editGambar').value = item.gambar;
+            document.getElementById('editVideo').value = item.video || '';
+            document.getElementById('editDeskripsi').value = item.deskripsi;
+
+            document.getElementById('modalEdit').classList.remove('hidden');
+            document.getElementById('modalEdit').classList.add('flex');
         }
 
-        function updateBuyerStatusUI(status) {
-            const badgeText = document.getElementById('buyerStatusText');
-            badgeText.innerText = status;
+        function tutupModalEdit() {
+            document.getElementById('modalEdit').classList.add('hidden');
+            document.getElementById('modalEdit').classList.remove('flex');
         }
 
-        /* PEMBAYARAN & STATUS PENGIRIMAN */
-        function processPayment(event) {
-            event.preventDefault();
+        function simpanEditProduk(e) {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('editId').value);
+            const item = dataProduk.find(p => p.id === id);
 
-            const name = document.getElementById('buyerName').value;
-            const phone = document.getElementById('buyerPhone').value;
-            const address = document.getElementById('buyerAddress').value;
+            if (item) {
+                item.nama = document.getElementById('editNama').value;
+                item.harga = parseInt(document.getElementById('editHarga').value);
+                item.gambar = document.getElementById('editGambar').value;
+                item.video = fixYouTubeUrl(document.getElementById('editVideo').value);
+                item.deskripsi = document.getElementById('editDeskripsi').value;
+            }
 
-            const newOrder = {
-                id: Math.floor(100000 + Math.random() * 900000),
-                produk: selectedProductForCheckout,
-                nama: name,
-                telepon: phone,
-                alamat: address,
-                status: "Diproses"
-            };
-
-            dataPesanan.unshift(newOrder);
-            currentActiveOrder = newOrder;
-
-            document.getElementById('checkoutForm').style.display = 'none';
-            
-            document.getElementById('statusOrderId').innerText = `#${newOrder.id}`;
-            document.getElementById('statusProdName').innerText = selectedProductForCheckout.nama;
-            document.getElementById('statusName').innerText = name;
-            document.getElementById('statusPhone').innerText = phone;
-            document.getElementById('statusAddress').innerText = address;
-
-            updateBuyerStatusUI(newOrder.status);
-
-            document.getElementById('shippingStatusArea').style.display = 'block';
-
-            showToast("Pembayaran Berhasil! Pesanan diproses.", "success");
-            lucide.createIcons();
+            tutupModalEdit();
+            renderProduk();
         }
 
-        document.addEventListener('DOMContentLoaded', initIcons);
+        // Render Pertama kali saat halaman dibuka
+        window.onload = renderProduk;
     </script>
 </body>
 </html>

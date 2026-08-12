@@ -491,20 +491,24 @@
         .product-price { font-weight: 800; color: var(--accent-green); font-size: 20px; margin-bottom: 12px; }
         .product-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; flex-grow: 1; line-height: 1.6; word-wrap: break-word; }
         
+        /* CONTAINER UNTUK YOUTUBE EMBED RESPONSIVE */
         .video-container {
             position: relative;
             width: 100%;
-            height: 180px;
+            padding-bottom: 56.25%; /* Rasio 16:9 */
+            height: 0;
             background: #000;
             border-radius: var(--radius-md);
             margin-bottom: 16px;
             overflow: hidden;
         }
         .product-video { 
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%; 
             height: 100%; 
-            object-fit: cover; 
-            display: block;
+            border: none;
         }
 
         .btn-buy { 
@@ -688,8 +692,8 @@
                             <input type="file" id="prodImg" class="file-input" accept="image/*">
                         </div>
                         <div class="form-group">
-                            <label><i data-lucide="video" size="16"></i> Video Demo <small id="vidHelpText" style="color:var(--text-muted); text-transform:none; font-weight:normal;"></small></label>
-                            <input type="file" id="prodVid" class="file-input" accept="video/*">
+                            <label><i data-lucide="video" size="16"></i> Link Embed YouTube <small id="vidHelpText" style="color:var(--text-muted); text-transform:none; font-weight:normal;"></small></label>
+                            <input type="url" id="prodVid" class="form-control" placeholder="https://www.youtube.com/embed/VIDEO_ID">
                         </div>
                     </div>
                     <button type="submit" class="btn-submit" id="btnSubmitForm">
@@ -795,7 +799,7 @@
     </div>
 
     <script>
-        /* INI ADALAH 5 BARANG ELEKTRONIK BAWAAN DENGAN GAMBAR & VIDEO DEMO KUALITAS TINGGI */
+        /* YOUTUBE EMBED URL SESUAI RESMI DENGAN BARANG ELEKTRONIK */
         let dataProduk = [
             {
                 id: 101,
@@ -803,7 +807,7 @@
                 harga: 39999000,
                 deskripsi: "Chipset M3 Max 16-Core, RAM 36GB, SSD 1TB. Performa super kencang untuk rendering 3D, editing video 8K, dan komputasi berat.",
                 gambar: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
-                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+                video: "https://www.youtube.com/embed/0kQI32I382A" /* YouTube Trailer MacBook Pro M3 */
             },
             {
                 id: 102,
@@ -811,7 +815,7 @@
                 harga: 24999000,
                 deskripsi: "Bodi Titanium kelas penerbangan, Chipset A17 Pro, Kamera Utama 48MP dengan 5x Optical Zoom, serta port USB-C kencang.",
                 gambar: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80",
-                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4"
+                video: "https://www.youtube.com/embed/xqyUdNxWazA" /* YouTube Trailer iPhone 15 Pro */
             },
             {
                 id: 103,
@@ -819,7 +823,7 @@
                 harga: 5999000,
                 deskripsi: "Headphone Noise Cancelling nirkabel terbaik di kelasnya. Baterai tahan hingga 30 jam, mikrofon jernih, dan Audio Hi-Res.",
                 gambar: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
-                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+                video: "https://www.youtube.com/embed/d3_14W-sBms" /* YouTube Video Sony WH-1000XM5 */
             },
             {
                 id: 104,
@@ -827,7 +831,7 @@
                 harga: 18499000,
                 deskripsi: "Layar Liquid Retina XDR Mini-LED, ditenagai Chip M2 super cepat, fitur Apple Pencil Hover, dan port Thunderbolt.",
                 gambar: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=800&q=80",
-                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4"
+                video: "https://www.youtube.com/embed/yUKRkyaXcps" /* YouTube Trailer iPad Pro M2 */
             },
             {
                 id: 105,
@@ -835,7 +839,7 @@
                 harga: 21999000,
                 deskripsi: "Dilengkapi Galaxy AI, S-Pen terintegrasi, Kamera 200MP dengan Space Zoom 100x, dan Snapdragon 8 Gen 3 for Galaxy.",
                 gambar: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800&q=80",
-                video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4"
+                video: "https://www.youtube.com/embed/_yL3A5o3Fz8" /* YouTube Trailer Samsung S24 Ultra */
             }
         ];
 
@@ -903,7 +907,7 @@
         function openAdminModal() {
             const modal = document.getElementById('adminAuthModal');
             const input = document.getElementById('adminPasswordInput');
-            input.value = 'admin123'; // Mengisi otomatis password admin
+            input.value = 'admin123';
             modal.classList.add('active');
             setTimeout(() => input.focus(), 100);
         }
@@ -970,7 +974,6 @@
         /* MANAJEMEN FORM & EDIT PRODUK */
         function setFormRequired(isRequired) {
             document.getElementById('prodImg').required = isRequired;
-            document.getElementById('prodVid').required = isRequired;
         }
         
         setFormRequired(true);
@@ -983,13 +986,13 @@
             document.getElementById('prodName').value = produk.nama;
             document.getElementById('prodPrice').value = produk.harga;
             document.getElementById('prodDesc').value = produk.deskripsi;
+            document.getElementById('prodVid').value = produk.video || '';
 
             setFormRequired(false);
 
             document.getElementById('formPanelTitle').innerHTML = `<i data-lucide="edit-3" size="22"></i> Edit Produk`;
             document.getElementById('btnSubmitText').innerText = "Simpan Perubahan";
             document.getElementById('imgHelpText').innerText = "(Kosongkan jika tidak ingin mengubah foto)";
-            document.getElementById('vidHelpText').innerText = "(Kosongkan jika tidak ingin mengubah video)";
             document.getElementById('btnCancelEdit').style.display = "flex";
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1004,7 +1007,6 @@
             document.getElementById('formPanelTitle').innerHTML = `<i data-lucide="plus-circle" size="22"></i> Tambah Produk Baru`;
             document.getElementById('btnSubmitText').innerText = "Publikasikan Produk";
             document.getElementById('imgHelpText').innerText = "";
-            document.getElementById('vidHelpText').innerText = "";
             document.getElementById('btnCancelEdit').style.display = "none";
             lucide.createIcons();
         }
@@ -1019,8 +1021,15 @@
                 const name = document.getElementById('prodName').value;
                 const price = document.getElementById('prodPrice').value;
                 const desc = document.getElementById('prodDesc').value;
+                let vidUrl = document.getElementById('prodVid').value || "https://www.youtube.com/embed/dQw4w9WgXcQ";
                 const imgFile = document.getElementById('prodImg').files[0];
-                const vidFile = document.getElementById('prodVid').files[0];
+
+                // Jika user menginputkan link youtube standar biasa, otomatis dikonversi ke embed URL
+                if (vidUrl.includes("watch?v=")) {
+                    vidUrl = vidUrl.replace("watch?v=", "embed/");
+                } else if (vidUrl.includes("youtu.be/")) {
+                    vidUrl = vidUrl.replace("youtu.be/", "www.youtube.com/embed/");
+                }
 
                 if (editId) {
                     const index = dataProduk.findIndex(p => p.id == editId);
@@ -1028,26 +1037,23 @@
                         dataProduk[index].nama = name;
                         dataProduk[index].harga = Number(price);
                         dataProduk[index].deskripsi = desc;
+                        dataProduk[index].video = vidUrl;
 
                         if (imgFile) {
                             dataProduk[index].gambar = await getBase64(imgFile);
-                        }
-                        if (vidFile) {
-                            dataProduk[index].video = await getBase64(vidFile);
                         }
 
                         showToast('Perubahan Produk Berhasil Disimpan!');
                         cancelEditMode();
                     }
                 } else {
-                    if (!imgFile || !vidFile) {
-                        showToast('Foto dan Video wajib diisi untuk produk baru!', 'error');
+                    if (!imgFile) {
+                        showToast('Foto wajib diisi untuk produk baru!', 'error');
                         submitBtn.disabled = false;
                         return;
                     }
 
                     const imgURL = await getBase64(imgFile);
-                    const vidURL = await getBase64(vidFile);
 
                     dataProduk.unshift({
                         id: Date.now(),
@@ -1055,7 +1061,7 @@
                         harga: Number(price),
                         deskripsi: desc,
                         gambar: imgURL,
-                        video: vidURL
+                        video: vidUrl
                     });
 
                     document.getElementById('adminForm').reset();
@@ -1064,7 +1070,7 @@
 
                 renderAdminList();
             } catch (error) {
-                showToast('Gagal memproses media.', 'error');
+                showToast('Gagal memproses data.', 'error');
             } finally {
                 submitBtn.disabled = false;
                 lucide.createIcons();
@@ -1183,7 +1189,7 @@
             lucide.createIcons();
         }
 
-        /* RENDER KATALOG */
+        /* RENDER KATALOG PEMBELI */
         function renderKatalog() {
             const grid = document.getElementById('katalogGrid');
             const keyword = document.getElementById('searchBar').value.toLowerCase();
@@ -1218,10 +1224,14 @@
                         <div class="product-price">${hargaRupiah}</div>
                         <div class="product-desc">${produk.deskripsi}</div>
                         
+                        <!-- IFRAME YOUTUBE DENGAN RESPONSIF LAYAR -->
                         <div class="video-container">
-                            <video class="product-video" src="${produk.video}" controls playsinline preload="metadata">
-                                Browser Anda tidak mendukung pemutaran video.
-                            </video>
+                            <iframe class="product-video" 
+                                    src="${produk.video}" 
+                                    title="${produk.nama}" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen>
+                            </iframe>
                         </div>
                         
                         <button class="btn-buy" onclick="goToCheckout(${produk.id})">
@@ -1232,7 +1242,6 @@
                 grid.appendChild(card);
             });
 
-            document.querySelectorAll('.product-video').forEach(video => video.load());
             lucide.createIcons();
         }
 

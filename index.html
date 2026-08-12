@@ -94,52 +94,6 @@
 
     <!-- Script JavaScript -->
     <script>
-        // Data Produk Utama dengan Video Embed Valid
-        let dataProduk = [
-            {
-                id: 101,
-                nama: "MacBook Pro 16\" M3 Max",
-                harga: 39999000,
-                deskripsi: "Chipset M3 Max 16-Core, RAM 36GB, SSD 1TB. Performa super kencang untuk rendering 3D, editing video 8K, dan komputasi berat.",
-                gambar: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
-                video: "https://www.youtube.com/embed/f4g2nPY-68c"
-            },
-            {
-                id: 102,
-                nama: "iPhone 15 Pro Max 256GB",
-                harga: 24999000,
-                deskripsi: "Bodi Titanium kelas penerbangan, Chipset A17 Pro, Kamera Utama 48MP dengan 5x Optical Zoom, serta port USB-C kencang.",
-                gambar: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80",
-                video: "https://www.youtube.com/embed/c4T4g0XFp7k"
-            },
-            {
-                id: 103,
-                nama: "Sony WH-1000XM5 Wireless Headphones",
-                harga: 5999000,
-                deskripsi: "Headphone Noise Cancelling nirkabel terbaik di kelasnya. Baterai tahan hingga 30 jam, mikrofon jernih, dan Audio Hi-Res.",
-                gambar: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
-                video: "https://www.youtube.com/embed/A8SIsE_GIs8"
-            },
-            {
-                id: 104,
-                nama: "iPad Pro 12.9\" M2 WiFi 256GB",
-                harga: 18499000,
-                deskripsi: "Layar Liquid Retina XDR Mini-LED, ditenagai Chip M2 super cepat, fitur Apple Pencil Hover, dan port Thunderbolt.",
-                gambar: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=800&q=80",
-                video: "https://www.youtube.com/embed/bS10vA4W1XQ"
-            },
-            {
-                id: 105,
-                nama: "Samsung Galaxy S24 Ultra 5G",
-                harga: 21999000,
-                deskripsi: "Dilengkapi Galaxy AI, S-Pen terintegrasi, Kamera 200MP dengan Space Zoom 100x, dan Snapdragon 8 Gen 3 for Galaxy.",
-                gambar: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800&q=80",
-                video: "https://www.youtube.com/embed/0J3X_1U_B4k"
-            }
-        ];
-
-        let isAdmin = false;
-
         // Fungsi Helper Konversi URL YouTube ke Format Embed
         function fixYouTubeUrl(url) {
             if (!url) return '';
@@ -150,6 +104,52 @@
             }
             return url;
         }
+
+        // Data Produk Utama dengan Video Sesuai Permintaan
+        let dataProduk = [
+            {
+                id: 101,
+                nama: "MacBook Pro 16\" M3 Max",
+                harga: 39999000,
+                deskripsi: "Chipset M3 Max 16-Core, RAM 36GB, SSD 1TB. Performa super kencang untuk rendering 3D, editing video 8K, dan komputasi berat.",
+                gambar: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80",
+                video: fixYouTubeUrl("https://youtu.be/fgfyEtqHhdI?si=-pc5yWpCtPM-COee")
+            },
+            {
+                id: 102,
+                nama: "iPhone 15 Pro Max 256GB",
+                harga: 24999000,
+                deskripsi: "Bodi Titanium kelas penerbangan, Chipset A17 Pro, Kamera Utama 48MP dengan 5x Optical Zoom, serta port USB-C kencang.",
+                gambar: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80",
+                video: fixYouTubeUrl("https://youtu.be/keYat4iSYAQ?si=Lvvtr8kardFArffr")
+            },
+            {
+                id: 103,
+                nama: "Sony WH-1000XM5 Wireless Headphones",
+                harga: 5999000,
+                deskripsi: "Headphone Noise Cancelling nirkabel terbaik di kelasnya. Baterai tahan hingga 30 jam, mikrofon jernih, dan Audio Hi-Res.",
+                gambar: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80",
+                video: fixYouTubeUrl("https://youtu.be/v6EjmbMgv80?si=PWYOKJTfcTW8TWuW")
+            },
+            {
+                id: 104,
+                nama: "iPad Pro 12.9\" M2 WiFi 256GB",
+                harga: 18499000,
+                deskripsi: "Layar Liquid Retina XDR Mini-LED, ditenagai Chip M2 super cepat, fitur Apple Pencil Hover, dan port Thunderbolt.",
+                gambar: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=800&q=80",
+                video: fixYouTubeUrl("https://youtu.be/nNI_x-WVTM0?si=m29ZGxd56YbfpQAF")
+            },
+            {
+                id: 105,
+                nama: "Samsung Galaxy S24 Ultra 5G",
+                harga: 21999000,
+                deskripsi: "Dilengkapi Galaxy AI, S-Pen terintegrasi, Kamera 200MP dengan Space Zoom 100x, dan Snapdragon 8 Gen 3 for Galaxy.",
+                gambar: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=800&q=80",
+                video: fixYouTubeUrl("https://youtu.be/ePdbj2bZ-Ro?si=zTxB4vvHsr219M55")
+            }
+        ];
+
+        let isAdmin = false;
 
         // Format Rupiah
         function formatRupiah(angka) {
